@@ -36,6 +36,9 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     // mainTextList.sort();
+    DateTime now = DateTime.now();
+    print(now);
+
     showText = mainTextList.elementAt(2);
     return Scaffold(
       // appBar: PreferredSize(
@@ -65,11 +68,12 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
+                // _buildLocateButton(),
                 _buildText(),
                 _buildTimer(),
                 // _builcAddButton(),
+
                 _buildAddButtonGradient(),
-                // _buildLocateButton(),
               ],
             ),
           ),
@@ -91,27 +95,27 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           ListTile(
-            leading: Icon(CupertinoIcons.placemark_fill),
+            leading: Icon(CupertinoIcons.placemark_fill, color: Colors.green),
             title: Container(child: Text('집 위치 설정')),
             onTap: () {},
           ),
           ListTile(
-            leading: Icon(CupertinoIcons.chart_pie),
+            leading: Icon(CupertinoIcons.chart_pie, color: Colors.green),
             title: Container(child: Text('개인 기록 확인')),
             onTap: () {},
           ),
           ListTile(
-            leading: Icon(CupertinoIcons.chart_bar_fill),
+            leading: Icon(CupertinoIcons.chart_bar_fill, color: Colors.green),
             title: Container(child: Text('랭킹 확인')),
             onTap: () {},
           ),
           ListTile(
-            leading: Icon(CupertinoIcons.share_solid),
+            leading: Icon(CupertinoIcons.share_solid, color: Colors.green),
             title: Container(child: Text('공유하기')),
             onTap: () {},
           ),
           ListTile(
-            leading: Icon(CupertinoIcons.info),
+            leading: Icon(CupertinoIcons.info, color: Colors.green),
             title: Container(child: Text('문의하기')),
             onTap: () {},
           ),
