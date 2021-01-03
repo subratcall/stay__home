@@ -50,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
           gradient: LinearGradient(
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,
-            colors: [Color(0xffdce35b), Color(0xff45b649)],
+            colors: [Color(0xffFFFFFF), Color(0xffFFFFFF)],
           ),
         ),
         child: Padding(
@@ -96,14 +96,23 @@ class _MyHomePageState extends State<MyHomePage> {
             onTap: () {},
           ),
           ListTile(
+            leading: Icon(CupertinoIcons.chart_pie),
+            title: Container(child: Text('개인 기록 확인')),
+            onTap: () {},
+          ),
+          ListTile(
             leading: Icon(CupertinoIcons.chart_bar_fill),
-            title: Container(
-              child: Text('랭킹 확인')),
+            title: Container(child: Text('랭킹 확인')),
             onTap: () {},
           ),
           ListTile(
             leading: Icon(CupertinoIcons.share_solid),
             title: Container(child: Text('공유하기')),
+            onTap: () {},
+          ),
+          ListTile(
+            leading: Icon(CupertinoIcons.info),
+            title: Container(child: Text('문의하기')),
             onTap: () {},
           ),
         ],
@@ -125,7 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
               style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
             Text(
-              "를 위해 집에 있어 주세요.",
+              "를 위해 집에 있어 주세요",
               style: TextStyle(fontSize: 25),
             ),
           ],
@@ -242,33 +251,33 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             Text(
               "1",
-              style: TextStyle(fontSize: 40),
+              style: TextStyle(fontSize: 50),
             ),
             Text(
               "일",
-              style: TextStyle(fontSize: 20),
+              style: TextStyle(fontSize: 30),
             ),
             SizedBox(
               width: 10,
             ),
             Text(
               "21",
-              style: TextStyle(fontSize: 40),
+              style: TextStyle(fontSize: 50),
             ),
             Text(
               "시간",
-              style: TextStyle(fontSize: 20),
+              style: TextStyle(fontSize: 30),
             ),
             SizedBox(
               width: 10,
             ),
             Text(
               "52",
-              style: TextStyle(fontSize: 40),
+              style: TextStyle(fontSize: 50),
             ),
             Text(
               "분",
-              style: TextStyle(fontSize: 20),
+              style: TextStyle(fontSize: 30),
             ),
           ],
         ),
