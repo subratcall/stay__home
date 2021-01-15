@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+
+import 'package:geolocator/geolocator.dart';
 
 void main() {
   runApp(MyApp());
@@ -32,6 +36,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<String> mainTextList = ['친구', '가족', '연인'];
   String showText;
+
+  Position position;
 
   @override
   Widget build(BuildContext context) {
