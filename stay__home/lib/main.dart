@@ -39,11 +39,56 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Position position;
 
+  String latitudeData = "";
+  String longitudeData = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _determinePosition();
+    getCurrentLocation();
+  }
+
+  getCurrentLocation() async {
+    final geoPosition = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+
+    setState(() {
+      latitudeData = '${geoPosition.latitude}';
+      longitudeData = '${geoPosition.longitude}';
+    });
+  }
+
+  Future<Position> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permantly denied, we cannot request permissions.');
+    }
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission != LocationPermission.whileInUse &&
+          permission != LocationPermission.always) {
+        return Future.error(
+            'Location permissions are denied (actual value: $permission).');
+      }
+    }
+
+    return await Geolocator.getCurrentPosition();
+  }
+
   @override
   Widget build(BuildContext context) {
     // mainTextList.sort();
-    DateTime now = DateTime.now();
-    print(now);
 
     showText = mainTextList.elementAt(2);
     return Scaffold(
@@ -72,13 +117,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 color: Colors.white,
                 borderRadius: BorderRadius.all(Radius.circular(20))),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 // _buildLocateButton(),
                 _buildText(),
                 _buildTimer(),
                 // _builcAddButton(),
 
+                // Text("위도:" + latitudeData),
+                // Text("경도:" +longitudeData),
                 _buildAddButtonGradient(),
               ],
             ),
@@ -90,20 +137,24 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _buildBottomSheet(BuildContext context) {
     return Container(
+      height: 300,
       child: ListView(
         padding: const EdgeInsets.all(8.0),
         children: [
-          Center(
-            child: Container(
-              color: Colors.black,
-              width: 100,
-              height: 100,
-            ),
-          ),
+          // Center(
+          //   child: Container(
+          //     color: Colors.black,
+          //     width: 100,
+          //     height: 100,
+          //   ),
+          // ),
           ListTile(
             leading: Icon(CupertinoIcons.placemark_fill, color: Colors.green),
             title: Container(child: Text('집 위치 설정')),
-            onTap: () {},
+            trailing: Text('집 위치(' + latitudeData + "," + longitudeData + ")"),
+            onTap: () {
+              getCurrentLocation();
+            },
           ),
           ListTile(
             leading: Icon(CupertinoIcons.chart_pie, color: Colors.green),
