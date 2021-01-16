@@ -5,7 +5,9 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:geolocator/geolocator.dart';
 
-void main() {
+//  isolate 앱이 켜져있을 때 계속 실행되는 함수.
+
+void main() async {
   runApp(MyApp());
 }
 
@@ -41,6 +43,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
   String latitudeData = "";
   String longitudeData = "";
+
+  DateTime startTime;
+  DateTime endTime;
+  int resultTime;
+
+  DateTime virtualTime;
 
   @override
   void initState() {
@@ -89,16 +97,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     // mainTextList.sort();
-
     showText = mainTextList.elementAt(2);
     return Scaffold(
-      // appBar: PreferredSize(
-      //   preferredSize: Size.fromHeight(20),
-      //   child: AppBar(
-      //     backgroundColor: Colors.transparent,
-      //     elevation: 0.0,
-      //   ),
-      // ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -123,7 +123,18 @@ class _MyHomePageState extends State<MyHomePage> {
                 _buildText(),
                 _buildTimer(),
                 // _builcAddButton(),
-
+                Row(
+                  children: [
+                    FlatButton(
+                      onPressed: () {},
+                      child: Text("시작"),
+                    ),
+                    FlatButton(
+                      onPressed: () {},
+                      child: Text("종료"),
+                    ),
+                  ],
+                ),
                 // Text("위도:" + latitudeData),
                 // Text("경도:" +longitudeData),
                 _buildAddButtonGradient(),
@@ -133,6 +144,20 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
+  }
+
+  void startTimer() {
+    startTime = DateTime.now();
+
+    print("Start Time: " + startTime.toString());
+  }
+
+  void endTimer() {
+    endTime = DateTime.now();
+    resultTime = (-(startTime.difference(endTime)).inSeconds);
+
+    print("End Time: " + endTime.toString());
+    print("Result Second: " + resultTime.toString());
   }
 
   Widget _buildBottomSheet(BuildContext context) {
