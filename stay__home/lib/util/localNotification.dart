@@ -6,10 +6,11 @@ class LocalNotification {
 
   static initializer() {
     flutterNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    androidSettings = AndroidNotificationDetails("111",
-        "Local_Notification_Channel", "Channel to test local notification",
+    androidSettings = AndroidNotificationDetails(
+        "111", "Background_task_Channel", "Channel to test local notification",
         importance: Importance.high, priority: Priority.max);
-    var androidInitialization = AndroidInitializationSettings('app_icon');
+    var androidInitialization =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
     var initializationSettings = InitializationSettings(
         android: androidInitialization, iOS: null, macOS: null);
     flutterNotificationsPlugin.initialize(initializationSettings,
@@ -20,15 +21,17 @@ class LocalNotification {
     print(payload);
   }
 
-  static ShowOneTimeNotification(DateTime scheduledDate) async {
+  static showOneTimeNotification(DateTime scheduledDate) async {
     var notificationDetails =
         NotificationDetails(android: androidSettings, iOS: null, macOS: null);
-    await flutterNotificationsPlugin.schedule(
+
+    await flutterNotificationsPlugin.zonedSchedule(
         1,
         "Background Task notification",
         "This is a background task notification",
         scheduledDate,
         notificationDetails,
-        androidAllowWhileIdle: true);
+        uiLocalNotificationDateInterpretation: null,
+        androidAllowWhileIdle: null);
   }
 }

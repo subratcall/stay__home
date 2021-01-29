@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
+import 'package:stay__home/controller.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -13,6 +15,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final controller = Get.put(Controller());
+
   List<String> mainTextList = ['친구', '가족', '연인'];
   String showText;
 
@@ -30,45 +34,65 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    _determinePosition();
-    getCurrentLocation();
+
+    controller.determinePosition();
+    controller.getCurrentLocation();
+    // _determinePosition();
+    // getCurrentLocation();
   }
 
-  getCurrentLocation() async {
-    final geoPosition = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+  // getCurrentLocation() async {
+  //   final geoPosition = await Geolocator.getCurrentPosition(
+  //       desiredAccuracy: LocationAccuracy.high);
 
-    setState(() {
-      latitudeData = '${geoPosition.latitude}';
-      longitudeData = '${geoPosition.longitude}';
-    });
+  //   setState(() {
+  //     latitudeData = '${geoPosition.latitude}';
+  //     longitudeData = '${geoPosition.longitude}';
+  //   });
+  // }
+
+  // Future<Position> _determinePosition() async {
+  //   bool serviceEnabled;
+  //   LocationPermission permission;
+
+  //   serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  //   if (!serviceEnabled) {
+  //     return Future.error('Location services are disabled.');
+  //   }
+
+  //   permission = await Geolocator.checkPermission();
+  //   if (permission == LocationPermission.deniedForever) {
+  //     return Future.error(
+  //         'Location permissions are permantly denied, we cannot request permissions.');
+  //   }
+
+  //   if (permission == LocationPermission.denied) {
+  //     permission = await Geolocator.requestPermission();
+  //     if (permission != LocationPermission.whileInUse &&
+  //         permission != LocationPermission.always) {
+  //       return Future.error(
+  //           'Location permissions are denied (actual value: $permission).');
+  //     }
+  //   }
+
+  //   return await Geolocator.getCurrentPosition();
+  // }
+
+  startTimer() {
+    startTime = DateTime.now();
+
+    print("Start Time: " + startTime.toString());
   }
 
-  Future<Position> _determinePosition() async {
-    bool serviceEnabled;
-    LocationPermission permission;
+  endTimer() {
+    endTime = DateTime.now();
+    resultTime = (-(startTime.difference(endTime)).inSeconds);
+    print("End Time: " + endTime.toString());
+    print("Result Second: " + resultTime.toString());
+  }
 
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-          'Location permissions are permantly denied, we cannot request permissions.');
-    }
-
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission != LocationPermission.whileInUse &&
-          permission != LocationPermission.always) {
-        return Future.error(
-            'Location permissions are denied (actual value: $permission).');
-      }
-    }
-
-    return await Geolocator.getCurrentPosition();
+  getLocation() {
+    controller.getCurrentLocation();
   }
 
   @override
@@ -101,40 +125,55 @@ class _MyHomePageState extends State<MyHomePage> {
                 _buildTimer(),
                 // _builcAddButton(),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    FlatButton(
-                      onPressed: () {},
+                    OutlineButton(
+                      onPressed: () {
+                        startTimer();
+                      },
                       child: Text("시작"),
                     ),
-                    FlatButton(
-                      onPressed: () {},
+                    OutlineButton(
+                      onPressed: () {
+                        endTimer();
+                      },
                       child: Text("종료"),
                     ),
                   ],
                 ),
-                // Text("위도:" + latitudeData),
-                // Text("경도:" +longitudeData),
-                _buildAddButtonGradient(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    OutlineButton(
+                      onPressed: () {
+                        getLocation();
+                      },
+                      child: Text("집 설정"),
+                    ),
+                    OutlineButton(
+                      onPressed: () {
+                        getLocation();
+                      },
+                      child: Text("체크"),
+                    ),
+                  ],
+                ),
+                GetBuilder<Controller>(builder: (_) {
+                  return Column(
+                    children: [
+                      Text("위도:" + _.latitudeData),
+                      Text("경도:" + _.longitudeData),
+                    ],
+                  );
+                }),
+
+                // _buildAddButtonGradient(),
               ],
             ),
           ),
         ),
       ),
     );
-  }
-
-  void startTimer() {
-    startTime = DateTime.now();
-
-    print("Start Time: " + startTime.toString());
-  }
-
-  void endTimer() {
-    endTime = DateTime.now();
-    resultTime = (-(startTime.difference(endTime)).inSeconds);
-
-    print("End Time: " + endTime.toString());
-    print("Result Second: " + resultTime.toString());
   }
 
   Widget _buildBottomSheet(BuildContext context) {
@@ -155,13 +194,8 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Container(child: Text('집 위치 설정')),
             trailing: Text('집 위치(' + latitudeData + "," + longitudeData + ")"),
             onTap: () {
-              getCurrentLocation();
+              controller.getCurrentLocation();
             },
-          ),
-          ListTile(
-            leading: Icon(CupertinoIcons.chart_pie, color: Colors.green),
-            title: Container(child: Text('개인 기록 확인')),
-            onTap: () {},
           ),
           ListTile(
             leading: Icon(CupertinoIcons.chart_bar_fill, color: Colors.green),
