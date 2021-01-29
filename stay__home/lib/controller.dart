@@ -6,14 +6,23 @@ class Controller extends GetxController {
 
   Position position;
 
-  String latitudeData = "";
-  String longitudeData = "";
+  //  위도: latitude, 경도: longitude
+  double homeLatitude = 0;
+  double homeLongitude = 0;
+
+  String latitudeDataString = "";
+  String longitudeDataString = "";
+
+  double latitudeData = 0;
+  double longitudeData = 0;
 
   getCurrentLocation() async {
     final geoPosition = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
-    latitudeData = '${geoPosition.latitude}';
-    longitudeData = '${geoPosition.longitude}';
+    latitudeDataString = '${geoPosition.latitude}';
+    longitudeDataString = '${geoPosition.longitude}';
+    latitudeData = geoPosition.latitude;
+    longitudeData = geoPosition.longitude;
     update();
   }
 
@@ -42,5 +51,50 @@ class Controller extends GetxController {
     }
     update();
     return await Geolocator.getCurrentPosition();
+  }
+
+  checkLocation() {
+    getCurrentLocation();
+    //  집이 아닌 경우
+    if (latitudeData > homeLatitude + 0.00100 ||
+        latitudeData < homeLatitude - 0.00100 ||
+        longitudeData > longitudeData + 0.00100 ||
+        longitudeData < longitudeData - 0.00100) {
+      print(latitudeData.toString() +
+          ":" +
+          longitudeData.toString() +
+          "은 집이 아닙니다.");
+    } else {
+      print(
+          latitudeData.toString() + ":" + longitudeData.toString() + "은 집입니다.");
+    }
+    update();
+  }
+
+  checkLocationParams(double _latitudeData, double _longitudeData) {
+    getCurrentLocation();
+    //  집이 아닌 경우
+    if (_latitudeData > homeLatitude + 0.00100 ||
+        _latitudeData < homeLatitude - 0.00100 ||
+        _longitudeData > homeLongitude + 0.00100 ||
+        _longitudeData < homeLongitude - 0.00100) {
+      print(_latitudeData.toString() +
+          ":" +
+          _longitudeData.toString() +
+          "은 집이 아닙니다.");
+    } else {
+      print(_latitudeData.toString() +
+          ":" +
+          _longitudeData.toString() +
+          "은 집입니다.");
+    }
+    update();
+  }
+
+  setHome() {
+    getCurrentLocation();
+    homeLatitude = latitudeData;
+    homeLongitude = longitudeData;
+    update();
   }
 }

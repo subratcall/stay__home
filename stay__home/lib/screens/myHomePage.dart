@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:stay__home/controller.dart';
+import 'package:workmanager/workmanager.dart';
+
+import '../main.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -31,52 +34,29 @@ class _MyHomePageState extends State<MyHomePage> {
 
   DateTime virtualTime;
 
+  // @override
+  // void initState() {
+  //   super.initState();
+
+  //   // controller.determinePosition();
+  //   // controller.getCurrentLocation();
+  // }
+
   @override
   void initState() {
     super.initState();
-
+    //  we don't need it anymore since it will be executed in background
+    //  this._getUserPosition();
     controller.determinePosition();
     controller.getCurrentLocation();
-    // _determinePosition();
-    // getCurrentLocation();
+    Workmanager.initialize(
+      callbackDispatcher,
+      isInDebugMode: true,
+    );
+
+    Workmanager.registerPeriodicTask("1", fetchBackground,
+        frequency: Duration(minutes: 15), initialDelay: Duration(seconds: 1));
   }
-
-  // getCurrentLocation() async {
-  //   final geoPosition = await Geolocator.getCurrentPosition(
-  //       desiredAccuracy: LocationAccuracy.high);
-
-  //   setState(() {
-  //     latitudeData = '${geoPosition.latitude}';
-  //     longitudeData = '${geoPosition.longitude}';
-  //   });
-  // }
-
-  // Future<Position> _determinePosition() async {
-  //   bool serviceEnabled;
-  //   LocationPermission permission;
-
-  //   serviceEnabled = await Geolocator.isLocationServiceEnabled();
-  //   if (!serviceEnabled) {
-  //     return Future.error('Location services are disabled.');
-  //   }
-
-  //   permission = await Geolocator.checkPermission();
-  //   if (permission == LocationPermission.deniedForever) {
-  //     return Future.error(
-  //         'Location permissions are permantly denied, we cannot request permissions.');
-  //   }
-
-  //   if (permission == LocationPermission.denied) {
-  //     permission = await Geolocator.requestPermission();
-  //     if (permission != LocationPermission.whileInUse &&
-  //         permission != LocationPermission.always) {
-  //       return Future.error(
-  //           'Location permissions are denied (actual value: $permission).');
-  //     }
-  //   }
-
-  //   return await Geolocator.getCurrentPosition();
-  // }
 
   startTimer() {
     startTime = DateTime.now();
@@ -89,10 +69,6 @@ class _MyHomePageState extends State<MyHomePage> {
     resultTime = (-(startTime.difference(endTime)).inSeconds);
     print("End Time: " + endTime.toString());
     print("Result Second: " + resultTime.toString());
-  }
-
-  getLocation() {
-    controller.getCurrentLocation();
   }
 
   @override
@@ -146,13 +122,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
                     OutlineButton(
                       onPressed: () {
-                        getLocation();
+                        controller.setHome();
                       },
                       child: Text("집 설정"),
                     ),
                     OutlineButton(
                       onPressed: () {
-                        getLocation();
+                        controller.checkLocation();
                       },
                       child: Text("체크"),
                     ),
@@ -161,8 +137,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 GetBuilder<Controller>(builder: (_) {
                   return Column(
                     children: [
-                      Text("위도:" + _.latitudeData),
-                      Text("경도:" + _.longitudeData),
+                      Text(_.homeLatitude.toString()),
+                      Text(_.homeLongitude.toString()),
                     ],
                   );
                 }),
