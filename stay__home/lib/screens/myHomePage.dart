@@ -34,19 +34,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   DateTime virtualTime;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-
-  //   // controller.determinePosition();
-  //   // controller.getCurrentLocation();
-  // }
-
   @override
   void initState() {
     super.initState();
-    //  we don't need it anymore since it will be executed in background
-    //  this._getUserPosition();
     controller.determinePosition();
     controller.getCurrentLocation();
     Workmanager.initialize(

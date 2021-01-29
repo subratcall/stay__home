@@ -3,10 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
-// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:stay__home/screens/myHomePage.dart';
-import 'package:stay__home/util/localNotification.dart';
 import 'package:workmanager/workmanager.dart';
 import 'util/localNotification.dart' as notif;
 
@@ -18,16 +16,6 @@ void callbackDispatcher() {
   final controller = Get.put(Controller());
 
   Workmanager.executeTask((task, inputData) async {
-    // switch (task) {
-    //   case fetchBackground:
-    //     LocalNotification.initializer();
-    //     LocalNotification.showOneTimeNotification(DateTime.now());
-    //     //  15분마다 돌아가는 함수
-    //     controller.checkLocation();
-    //     break;
-    //   default:
-    // }
-
     switch (task) {
       case fetchBackground:
         //Geolocator geoLocator = Geolocator()..forceAndroidLocationManager = true;
@@ -48,20 +36,6 @@ void callbackDispatcher() {
 }
 
 void main() {
-  // WidgetsFlutterBinding.ensureInitialized();
-  //  geolocation initializing
-
-  // print("latitude: " + controller.latitudeData.toString());
-  // print("longitude: " + controller.longitudeData.toString());
-
-  // await Workmanager.initialize(callbackDispatcher, isInDebugMode: true);
-  // await Workmanager.registerPeriodicTask(
-  //   "1",
-  //   "GeolocationTask",
-  //   // inputData: {"data1": "value1", "data2": "value2"},
-  //   frequency: Duration(minutes: 1),
-  //   initialDelay: Duration(minutes: 1),
-  // );
   runApp(MyApp());
 }
 
