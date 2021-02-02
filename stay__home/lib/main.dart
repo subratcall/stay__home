@@ -14,7 +14,6 @@ const fetchBackground = "fetchBackground";
 
 void callbackDispatcher() {
   final controller = Get.put(Controller());
-
   Workmanager.executeTask((task, inputData) async {
     switch (task) {
       case fetchBackground:

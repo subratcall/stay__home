@@ -88,6 +88,7 @@ class Controller extends GetxController {
           _longitudeData.toString() +
           "은 집입니다.");
     }
+    print("현재 집 = ${homeLatitude}:${homeLongitude}");
     update();
   }
 
