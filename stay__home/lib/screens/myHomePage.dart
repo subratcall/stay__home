@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:stay__home/controller.dart';
+import 'package:stay__home/util/http.dart';
 import 'package:workmanager/workmanager.dart';
 
 import '../main.dart';
@@ -22,7 +23,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List<String> mainTextList = ['친구', '가족', '연인'];
   String showText;
-
   Position position;
 
   String latitudeData = "";
@@ -121,6 +121,13 @@ class _MyHomePageState extends State<MyHomePage> {
                         controller.checkLocation();
                       },
                       child: Text("체크"),
+                    ),
+                    OutlineButton(
+                      onPressed: () {
+                        Https()
+                            .getHttp("http://15.164.195.117:3000/api/utils/");
+                      },
+                      child: Text("Http 통신"),
                     ),
                   ],
                 ),
