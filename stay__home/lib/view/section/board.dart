@@ -35,20 +35,23 @@ class SectionBoard extends StatelessWidget {
           ],
         ),
         SizedBox(height: 10),
-        Text("🏡 Stay Home Challenge"),
-        SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               "${mainTextList[0]}",
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
             ),
             Text(
               "를 위해 집에 있어 주세요",
-              style: TextStyle(fontSize: 25),
+              style: TextStyle(fontSize: 18),
             ),
           ],
+        ),
+        SizedBox(height: 30),
+        Text(
+          "🏡 Stay Home Challenge",
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w200),
         ),
       ],
     );
