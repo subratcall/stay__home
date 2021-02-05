@@ -1,8 +1,10 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 
-class Controller extends GetxController {
-  static Controller get to => Get.find();
+class LoactionController extends GetxController {
+  static LoactionController get to => Get.find();
+
+  bool isHome = false;
 
   Position position;
 
@@ -82,11 +84,13 @@ class Controller extends GetxController {
           ":" +
           _longitudeData.toString() +
           "은 집이 아닙니다.");
+      isHome = false;
     } else {
       print(_latitudeData.toString() +
           ":" +
           _longitudeData.toString() +
           "은 집입니다.");
+      isHome = true;
     }
     print("현재 집 = ${homeLatitude}:${homeLongitude}");
     update();

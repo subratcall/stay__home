@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:stay__home/controller/LocationController.dart';
+import 'package:stay__home/screens/myHomePage.dart';
+import 'package:stay__home/util/http.dart';
+// import 'package:screenshot_share/screenshot_share.dart';
+import 'package:ndialog/ndialog.dart';
+import 'package:get/get.dart';
 
 class SectionDrawer extends StatefulWidget {
   @override
@@ -6,6 +12,9 @@ class SectionDrawer extends StatefulWidget {
 }
 
 class _SectionDrawerState extends State<SectionDrawer> {
+  String nickname = '닉네임설정';
+  final controller = Get.put(LoactionController());
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -20,7 +29,7 @@ class _SectionDrawerState extends State<SectionDrawer> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '닉네임',
+                      nickname,
                       style: TextStyle(fontSize: 30),
                     ),
                     SizedBox(
@@ -29,6 +38,7 @@ class _SectionDrawerState extends State<SectionDrawer> {
                     InkWell(
                       child: Icon(Icons.edit),
                       onTap: () {
+                        controller.setHome();
                         print("닉네임 변경");
                       },
                     ),
@@ -61,6 +71,11 @@ class _SectionDrawerState extends State<SectionDrawer> {
             ),
             title: Text('문의하기'),
             onTap: () {
+              NAlertDialog(
+                title: Text("Test"),
+                content: Text("개발자 이메일: fnvl7426@naver.com"),
+                blur: 2,
+              ).show(context);
               print("문의하기");
             },
           ),

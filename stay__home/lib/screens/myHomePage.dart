@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:stay__home/controller.dart';
+import 'package:stay__home/controller/LocationController.dart';
 import 'package:stay__home/screens/section/board.dart';
 import 'package:stay__home/screens/section/drawer.dart';
 import 'package:stay__home/screens/section/timer.dart';
@@ -22,7 +22,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final controller = Get.put(Controller());
+  final controller = Get.put(LoactionController());
   String showText;
   Position position;
 
@@ -123,11 +123,40 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ],
                 ),
-                GetBuilder<Controller>(builder: (_) {
+                GetBuilder<LoactionController>(builder: (_) {
                   return Column(
                     children: [
                       Text(_.homeLatitude.toString()),
                       Text(_.homeLongitude.toString()),
+                      Center(
+                        child: _.isHome
+                            ? Container(
+                                width: 150,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                    color: Colors.green,
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Center(
+                                  child: Text(
+                                    "현재 집입니다",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              )
+                            : Container(
+                                width: 150,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Center(
+                                  child: Text(
+                                    "현재 집이 아닙니다.",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                      ),
                     ],
                   );
                 }),

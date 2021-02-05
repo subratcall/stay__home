@@ -1,4 +1,3 @@
-import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter/material.dart';
 
 class SectionTimer extends StatefulWidget {
@@ -6,93 +5,78 @@ class SectionTimer extends StatefulWidget {
   _SectionTimerState createState() => _SectionTimerState();
 }
 
-class _SectionTimerState extends State<SectionTimer> {
-  int _duration = 10;
-  CountDownController _timercontroller = CountDownController();
+class _SectionTimerState extends State<SectionTimer>
+    with TickerProviderStateMixin {
+  int _counter = 0;
+  AnimationController _controller;
+  int levelClock = 1800000;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+        vsync: this,
+        duration: Duration(
+            seconds:
+                levelClock) // gameData.levelClock is a user entered number elsewhere in the applciation
+        );
+
+    // _controller.forward();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Center(
       child: Column(
-        children: [
-          Center(
-            child: CircularCountDownTimer(
-              duration: _duration,
-
-              // Controls (i.e Start, Pause, Resume, Restart) the Countdown Timer.
-              controller: _timercontroller,
-
-              // Width of the Countdown Widget.
-              width: MediaQuery.of(context).size.width / 2,
-
-              // Height of the Countdown Widget.
-              height: MediaQuery.of(context).size.height / 2.5,
-
-              // Ring Color for Countdown Widget.
-              color: Colors.grey[100],
-
-              // 이 부분이 keycolor로 들어가면 될 듯?
-              fillColor: Colors.purpleAccent[100],
-
-              // Background Color for Countdown Widget.
-              backgroundColor: Colors.white,
-
-              // Border Thickness of the Countdown Ring.
-              strokeWidth: 15.0,
-
-              // Begin and end contours with a flat edge and no extension.
-              strokeCap: StrokeCap.round,
-
-              // Text Style for Countdown Text.
-              textStyle: TextStyle(
-                  fontSize: 33.0,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold),
-
-              // Format for the Countdown Text.
-              textFormat: CountdownTextFormat.HH_MM_SS,
-
-              // Handles Countdown Timer (true for Reverse Countdown (max to 0), false for Forward Countdown (0 to max)).
-              isReverse: false,
-
-              // Handles Animation Direction (true for Reverse Animation, false for Forward Animation).
-              isReverseAnimation: false,
-
-              // Handles visibility of the Countdown Text.
-              isTimerTextShown: true,
-
-              // Handles the timer start.
-              autoStart: false,
-
-              // This Callback will execute when the Countdown Starts.
-              onStart: () {
-                // Here, do whatever you want
-                print('Countdown Started');
-              },
-
-              // This Callback will execute when the Countdown Ends.
-              onComplete: () {
-                // Here, do whatever you want
-                print('Countdown Ended');
-              },
-            ),
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Countdown(
+            animation: StepTween(
+              begin: 0, // THIS IS A USER ENTERED NUMBER
+              end: levelClock,
+            ).animate(_controller),
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              FlatButton(
-                  onPressed: () {
-                    _timercontroller.start();
-                  },
-                  child: Text("T 시작")),
-              FlatButton(
-                  onPressed: () {
-                    _timercontroller.pause();
-                  },
-                  child: Text("T 종료")),
+              RaisedButton(onPressed: () => _controller.forward()),
+              RaisedButton(onPressed: () => _controller.stop()),
             ],
-          )
+          ),
         ],
+      ),
+    );
+  }
+}
+
+// ignore: must_be_immutable
+class Countdown extends AnimatedWidget {
+  Countdown({Key key, this.animation}) : super(key: key, listenable: animation);
+  Animation<int> animation;
+
+  @override
+  build(BuildContext context) {
+    Duration clockTimer = Duration(seconds: animation.value);
+
+    String timerText =
+        '${clockTimer.inMinutes.remainder(60).toString()}:${clockTimer.inSeconds.remainder(60).toString().padLeft(2, '0')}';
+
+    print('animation.value  ${animation.value} ');
+    // print('inMinutes ${clockTimer.inMinutes.toString()}');
+    // print('inSeconds ${clockTimer.inSeconds.toString()}');
+    // print(
+    //     'inSeconds.remainder ${clockTimer.inSeconds.remainder(60).toString()}');
+    return Text(
+      "$timerText",
+      style: TextStyle(
+        fontSize: 100,
+        color: Theme.of(context).primaryColor,
       ),
     );
   }

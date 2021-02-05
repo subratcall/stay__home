@@ -1,19 +1,19 @@
 import 'dart:async';
+import 'dart:isolate';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:stay__home/controller/LocationController.dart';
 import 'package:stay__home/screens/myHomePage.dart';
 import 'package:workmanager/workmanager.dart';
 import 'util/localNotification.dart' as notif;
 
-import 'controller.dart';
-
 const fetchBackground = "fetchBackground";
 
 void callbackDispatcher() {
-  final controller = Get.put(Controller());
+  final controller = Get.put(LoactionController());
   Workmanager.executeTask((task, inputData) async {
     switch (task) {
       case fetchBackground:
