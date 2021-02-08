@@ -64,7 +64,7 @@ class Countdown extends AnimatedWidget {
     Duration clockTimer = Duration(seconds: animation.value);
 
     String timerText =
-        '${clockTimer.inMinutes.remainder(60).toString()}:${clockTimer.inSeconds.remainder(60).toString().padLeft(2, '0')}';
+        '${(clockTimer.inMinutes.remainder(60) ~/ 1440).toString()}D:${(clockTimer.inHours.remainder(60) % 24).toString().padLeft(2, '0')}H:${clockTimer.inMinutes.remainder(60).toString().padLeft(2, '0')}M';
 
     print('animation.value  ${animation.value} ');
     // print('inMinutes ${clockTimer.inMinutes.toString()}');
@@ -74,8 +74,8 @@ class Countdown extends AnimatedWidget {
     return Text(
       "$timerText",
       style: TextStyle(
-        fontSize: 100,
-        color: Theme.of(context).primaryColor,
+        fontSize: 50,
+        color: Colors.black,
       ),
     );
   }
