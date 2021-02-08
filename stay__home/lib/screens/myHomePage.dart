@@ -22,7 +22,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final controller = Get.put(LoactionController());
   String showText;
   Position position;
 
@@ -35,11 +34,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
   DateTime virtualTime;
 
+  final locationcontroller = Get.put(LoactionController());
   @override
   void initState() {
     super.initState();
-    controller.determinePosition();
-    controller.getCurrentLocation();
+    locationcontroller.determinePosition();
+    locationcontroller.getCurrentLocation();
     Workmanager.initialize(
       callbackDispatcher,
       isInDebugMode: true,
@@ -104,13 +104,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
                     OutlineButton(
                       onPressed: () {
-                        controller.setHome();
+                        locationcontroller.setHome();
                       },
                       child: Text("집 설정"),
                     ),
                     OutlineButton(
                       onPressed: () {
-                        controller.checkLocation();
+                        locationcontroller.checkLocation();
                       },
                       child: Text("체크"),
                     ),
@@ -160,8 +160,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     ],
                   );
                 }),
-
-                // _buildAddButtonGradient(),
               ],
             ),
           ),

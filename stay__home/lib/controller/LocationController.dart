@@ -66,9 +66,11 @@ class LoactionController extends GetxController {
           ":" +
           longitudeData.toString() +
           "은 집이 아닙니다.");
+      isHome = false;
     } else {
       print(
           latitudeData.toString() + ":" + longitudeData.toString() + "은 집입니다.");
+      isHome = true;
     }
     update();
   }

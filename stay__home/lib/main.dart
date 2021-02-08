@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:isolate';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,26 +7,22 @@ import 'package:get/get.dart';
 import 'package:stay__home/controller/LocationController.dart';
 import 'package:stay__home/screens/myHomePage.dart';
 import 'package:workmanager/workmanager.dart';
-import 'util/localNotification.dart' as notif;
 
 const fetchBackground = "fetchBackground";
 
 void callbackDispatcher() {
-  final controller = Get.put(LoactionController());
   Workmanager.executeTask((task, inputData) async {
     switch (task) {
       case fetchBackground:
         //Geolocator geoLocator = Geolocator()..forceAndroidLocationManager = true;
         Position userLocation = await Geolocator.getCurrentPosition(
             desiredAccuracy: LocationAccuracy.high);
-        notif.Notification notification = new notif.Notification();
-        notification.showNotificationWithoutSound(userLocation);
-        controller.checkLocationParams(
-            userLocation.latitude, userLocation.longitude);
-        print("안머아ㅣㅁ너아ㅓ아ㅓㅏㅇ");
+        Get.find<LoactionController>()
+            .checkLocationParams(userLocation.latitude, userLocation.longitude);
+        print("${DateTime.now()} : ");
         break;
       default:
-        controller.determinePosition();
+        Get.find<LoactionController>().determinePosition();
         break;
     }
     return Future.value(true);
