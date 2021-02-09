@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:stay__home/controller/LocationController.dart';
-import 'package:stay__home/screens/section/board.dart';
-import 'package:stay__home/screens/section/drawer.dart';
-import 'package:stay__home/screens/section/timer.dart';
-import 'package:stay__home/util/http.dart';
+import 'package:stay__home/view/section/board.dart';
+import 'package:stay__home/view/section/drawer.dart';
+import 'package:stay__home/view/section/timer.dart';
+import 'package:stay__home/service/http.dart';
 import 'package:workmanager/workmanager.dart';
 
 import '../main.dart';
@@ -40,13 +40,6 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     locationcontroller.determinePosition();
     locationcontroller.getCurrentLocation();
-    Workmanager.initialize(
-      callbackDispatcher,
-      isInDebugMode: true,
-    );
-
-    Workmanager.registerPeriodicTask("1", fetchBackground,
-        frequency: Duration(minutes: 15), initialDelay: Duration(seconds: 1));
   }
 
   startTimer() {
@@ -129,7 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       Text(_.homeLatitude.toString()),
                       Text(_.homeLongitude.toString()),
                       Center(
-                        child: _.isHome
+                        child: _.isHome.value
                             ? Container(
                                 width: 150,
                                 height: 50,

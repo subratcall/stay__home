@@ -7,7 +7,6 @@ class SectionTimer extends StatefulWidget {
 
 class _SectionTimerState extends State<SectionTimer>
     with TickerProviderStateMixin {
-  int _counter = 0;
   AnimationController _controller;
   int levelClock = 1800000;
 

@@ -2,15 +2,23 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 
 class LoactionController extends GetxController {
-  static LoactionController get to => Get.find();
-
-  bool isHome = false;
+  /*
+   * GetBuilder 밖의 여러 곳에서 controller를 사용해야 하는 경우,
+   * 간단하게 Controller 클래스 안의 getter로 접근할 수 있음.
+   * 
+   * 꼭 이렇게 할 필요는 없지만, 문법적으로 용이하게 사용하기 위해 권장.
+   * static 메소드로 사용할 경우: Controller.to.conter();
+   * static 메소드로 사용하지 않을 경우: Get.find<Controller>().counter();
+   * 이 둘 간의 성능적 차이는 없으며, 문법적 차이로 오는 부ㅏㄱ용도 없다.
+   * 단순히 하나는 type를 적을 필요가 없고, 다른 하나는 IDE가 자동완성 해준다는 차이점밖에 없음.
+   */
+  // static LoactionController get to => Get.find();
 
   Position position;
+  RxBool isHome = false.obs;
 
-  //  위도: latitude, 경도: longitude
-  double homeLatitude = 0;
-  double homeLongitude = 0;
+  double homeLatitude = 0; //  집의 위도
+  double homeLongitude = 0; //  집의 경도
 
   String latitudeDataString = "";
   String longitudeDataString = "";
@@ -66,11 +74,11 @@ class LoactionController extends GetxController {
           ":" +
           longitudeData.toString() +
           "은 집이 아닙니다.");
-      isHome = false;
+      isHome.value = false;
     } else {
       print(
           latitudeData.toString() + ":" + longitudeData.toString() + "은 집입니다.");
-      isHome = true;
+      isHome.value = true;
     }
     update();
   }
@@ -86,13 +94,13 @@ class LoactionController extends GetxController {
           ":" +
           _longitudeData.toString() +
           "은 집이 아닙니다.");
-      isHome = false;
+      isHome.value = false;
     } else {
       print(_latitudeData.toString() +
           ":" +
           _longitudeData.toString() +
           "은 집입니다.");
-      isHome = true;
+      isHome.value = true;
     }
     print("현재 집 = ${homeLatitude}:${homeLongitude}");
     update();
