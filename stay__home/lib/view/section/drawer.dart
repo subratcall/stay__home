@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stay__home/controller/LocationController.dart';
-import 'package:stay__home/view/myHomePage.dart';
+import 'package:stay__home/view/mainPage.dart';
 import 'package:stay__home/service/http.dart';
 // import 'package:screenshot_share/screenshot_share.dart';
 import 'package:ndialog/ndialog.dart';

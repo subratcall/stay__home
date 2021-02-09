@@ -55,6 +55,12 @@ class DBController {
   void onInit() async {
     database = openDatabase(
       join(await getDatabasesPath(), 'stayHome_database.db'),
+      onCreate: (db, version) {
+        return db.execute(
+          "CREATE TABLE user(id INTEGER PRIMARY KEY,name TEXT, topTime INTEGER, accTime INTEGER, latitude REAL, longitude REAl)",
+        );
+      },
+      version: 1,
     );
   }
 
