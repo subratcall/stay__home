@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:stay__home/controller/LocationController.dart';
 
 class OnboardingPage2 extends StatefulWidget {
   @override
@@ -10,51 +12,134 @@ class OnboardingPage2 extends StatefulWidget {
 
 class _OnboardingPageState2 extends State<OnboardingPage2> {
   bool isOk = false;
-
+  int state = 0;
+  String tileText;
   final _formKey = GlobalKey<FormState>();
+  Position position;
+
+  String latitudeData = "";
+  String longitudeData = "";
+
+  DateTime startTime;
+  DateTime endTime;
+  int resultTime;
+
+  DateTime virtualTime;
+
+  final locationcontroller = Get.put(LoactionController());
+  @override
+  void initState() {
+    super.initState();
+    isOk = false;
+    locationcontroller.determinePosition();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: renderSecondPage(),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        child: Container(
-          height: 55,
-          child: CupertinoButton(
-            disabledColor: Colors.grey,
-            color: Colors.cyan,
-            onPressed: isOk
-                ? () {
-                    Get.toNamed('/');
-                  }
-                : null,
-            child: Text(
-              "확인",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold),
-            ),
-          ),
+        body: Center(
+          child: renderSecondPage(),
         ),
-      ),
-    );
+        bottomNavigationBar: GetBuilder<LoactionController>(
+          builder: (_) {
+            if (_.longitudeData != 0.0 ||
+                _.latitudeData != 0.0 ) {
+              isOk = true;
+            } else {
+              isOk = false;
+            }
+            return BottomAppBar(
+              child: Container(
+                height: 55,
+                color: isOk ? Colors.cyan : Colors.grey,
+                child: CupertinoButton(
+                  disabledColor: Colors.grey,
+                  onPressed: isOk
+                      ? () {
+                          Get.toNamed('/');
+                        }
+                      : null,
+                  child: Text(
+                    "확인",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            );
+          },
+        ));
   }
 
   Widget renderSecondPage() {
     return Container(
       alignment: Alignment.center,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          renderTitle("사용하실 닉네임을 입력해 주세요."),
-          SizedBox(
-            height: 20,
+      child: state == 0
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                renderTitle("사용하실 닉네임을 입력해 주세요"),
+                SizedBox(
+                  height: 20,
+                ),
+                renderNameForm(),
+              ],
+            )
+          : Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                renderTitle("집의 위치를 설정해주세요"),
+                SizedBox(
+                  height: 20,
+                ),
+                renderLocation(),
+              ],
+            ),
+    );
+  }
+
+  Widget renderLocation() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Container(
+        width: 300,
+        decoration: BoxDecoration(
+          color: Colors.cyan,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: ListTile(
+          // leading: Icon(Icons.location_on_outlined, color: Colors.white),
+          onTap: () async {
+            await locationcontroller.setHome();
+          },
+          title: Text(
+            "현재 위치를 집으로 설정합니다",
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-          renderNameForm(),
-        ],
+          subtitle: GetBuilder<LoactionController>(
+            builder: (_) {
+              if (_.longitudeData == 0.0 || _.latitudeData == 0.0) {
+                tileText = "클릭으로 위치를 지정해 주세요.";
+              } else {
+                tileText =
+                    "${_.longitudeData.toString()}, ${_.latitudeData.toString()}";
+              }
+              return Text(
+                tileText,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.normal,
+                ),
+              );
+            },
+          ),
+        ),
       ),
     );
   }
@@ -119,7 +204,7 @@ class _OnboardingPageState2 extends State<OnboardingPage2> {
                     // 스낵바를 통해 메시지 출력
                     // Get.snackbar("title", "message");
                     setState(() {
-                      isOk = true;
+                      state = 1;
                     });
                   }
                 },
