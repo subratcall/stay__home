@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:stay__home/controller/TimeController.dart';
+import 'package:get/get.dart';
 
 class SectionTimer extends StatefulWidget {
   @override
@@ -7,12 +9,12 @@ class SectionTimer extends StatefulWidget {
 
 class _SectionTimerState extends State<SectionTimer>
     with TickerProviderStateMixin {
-  AnimationController _controller;
+  final timerController = Get.put(TimeController());
   int levelClock = 1800000;
 
   @override
   void dispose() {
-    _controller.dispose();
+    TimeController().dispose();
     super.dispose();
   }
 
@@ -20,7 +22,7 @@ class _SectionTimerState extends State<SectionTimer>
   void initState() {
     super.initState();
 
-    _controller = AnimationController(
+    timerController.timercontroller = AnimationController(
         vsync: this,
         duration: Duration(
             seconds:
@@ -32,7 +34,8 @@ class _SectionTimerState extends State<SectionTimer>
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return GetBuilder<TimeController>(builder: (_) {
+      return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -40,18 +43,18 @@ class _SectionTimerState extends State<SectionTimer>
             animation: StepTween(
               begin: 0, // THIS IS A USER ENTERED NUMBER
               end: levelClock,
-            ).animate(_controller),
+            ).animate(timerController.timercontroller),
           ),
           Row(
             children: [
-              RaisedButton(onPressed: () => _controller.forward()),
-              RaisedButton(onPressed: () => _controller.stop()),
+              RaisedButton(onPressed: () => timerController.startTimer()),
+              RaisedButton(onPressed: () => timerController.endTimer()),
             ],
           ),
         ],
       ),
     );
-  }
+  });
 }
 
 // ignore: must_be_immutable
