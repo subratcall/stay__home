@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:stay__home/service/httpHelper.dart';
+
 
 class OnboardingPage1 extends StatefulWidget {
   @override
@@ -9,9 +11,13 @@ class OnboardingPage1 extends StatefulWidget {
 
 class _OnboardingPageState1 extends State<OnboardingPage1> {
   //   SQLite를 까서 봤을 때 계정이 없으면 첫실행으로 간주, 계정이 있으면 첫실행이 아닌걸로 간주
+  final httpService = new HttpService();
 
   @override
   Widget build(BuildContext context) {
+    // httpService.getUserInfo();
+    // httpService.duplicateInspection("");
+    httpService.createAccount(name: "이영범범", longitude: 0.0, latitude: 0.0);
     return Scaffold(
       body: Center(
         child: renderFirstPage(),
@@ -29,7 +35,7 @@ class _OnboardingPageState1 extends State<OnboardingPage1> {
               style: TextStyle(
                   color: Colors.white,
                   fontSize: 18,
-                  fontWeight: FontWeight.bold),
+                  fontWeight: FontWeight.bold,),
             ),
           ),
         ),

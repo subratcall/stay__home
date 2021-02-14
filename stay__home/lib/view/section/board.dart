@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stay__home/model/uesr.dart';
-import 'package:stay__home/service/dbController.dart';
+import 'package:stay__home/service/databaseHelper.dart';
 
 class SectionBoard extends StatelessWidget {
   SectionBoard({this.title});
