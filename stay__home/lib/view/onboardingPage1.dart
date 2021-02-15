@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stay__home/service/httpHelper.dart';
 
-
 class OnboardingPage1 extends StatefulWidget {
   @override
   _OnboardingPageState1 createState() => _OnboardingPageState1();
@@ -17,7 +16,7 @@ class _OnboardingPageState1 extends State<OnboardingPage1> {
   Widget build(BuildContext context) {
     // httpService.getUserInfo();
     // httpService.duplicateInspection("");
-    httpService.createAccount(name: "이영범범", longitude: 0.0, latitude: 0.0);
+    // httpService.createAccount(name: "이영범범", longitude: 0.0, latitude: 0.0);
     return Scaffold(
       body: Center(
         child: renderFirstPage(),
@@ -33,9 +32,10 @@ class _OnboardingPageState1 extends State<OnboardingPage1> {
             child: Text(
               "확인",
               style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,),
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),

@@ -33,6 +33,7 @@ class LoactionController extends GetxController {
     longitudeDataString = '${geoPosition.longitude}';
     latitudeData = geoPosition.latitude;
     longitudeData = geoPosition.longitude;
+    print(latitudeDataString + longitudeDataString);
     update();
   }
 
@@ -63,8 +64,8 @@ class LoactionController extends GetxController {
     return await Geolocator.getCurrentPosition();
   }
 
-  checkLocation() {
-    getCurrentLocation();
+  checkLocation() async {
+    await getCurrentLocation();
     //  집이 아닌 경우
     if (latitudeData > homeLatitude + 0.00100 ||
         latitudeData < homeLatitude - 0.00100 ||

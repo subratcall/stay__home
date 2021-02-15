@@ -8,6 +8,7 @@ import 'package:stay__home/controller/LocationController.dart';
 import 'package:stay__home/view/mainPage.dart';
 import 'package:stay__home/view/onboardingPage1.dart';
 import 'package:stay__home/view/onboardingPage2.dart';
+import 'package:stay__home/view/testPage.dart';
 import 'package:workmanager/workmanager.dart';
 
 const fetchBackground = "fetchBackground";
@@ -57,7 +58,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.grey,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      initialRoute: '/onboardingPage1',
+      // initialRoute: '/onboardingPage1',
+      initialRoute: '/testPage',
       getPages: [
         GetPage(
           name: '/',
@@ -72,6 +74,11 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: '/onboardingPage2',
           page: () => OnboardingPage2(),
+          transition: Transition.fadeIn,
+        ),
+        GetPage(
+          name: '/testPage',
+          page: () => TestPage(),
           transition: Transition.fadeIn,
         ),
       ],

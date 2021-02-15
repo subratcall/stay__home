@@ -7,10 +7,6 @@ import 'package:stay__home/controller/LocationController.dart';
 import 'package:stay__home/view/section/board.dart';
 import 'package:stay__home/view/section/drawer.dart';
 import 'package:stay__home/view/section/timer.dart';
-import 'package:stay__home/service/httpHelper.dart';
-import 'package:workmanager/workmanager.dart';
-
-import '../main.dart';
 
 class MainPage extends StatefulWidget {
   MainPage({Key key, this.title}) : super(key: key);
@@ -110,7 +106,7 @@ class _MainPageState extends State<MainPage> {
                     OutlineButton(
                       onPressed: () {
                         // Https()
-                            // .getHttp("http://15.164.195.117:3000/api/utils/");
+                        // .getHttp("http://15.164.195.117:3000/api/utils/");
                       },
                       child: Text("Http 통신"),
                     ),
