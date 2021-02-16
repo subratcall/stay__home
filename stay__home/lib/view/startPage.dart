@@ -1,22 +1,42 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stay__home/design/ColorSet.dart';
 import 'package:stay__home/service/httpHelper.dart';
 
-class OnboardingPage1 extends StatefulWidget {
+class StartPage extends StatefulWidget {
   @override
-  _OnboardingPageState1 createState() => _OnboardingPageState1();
+  _StarPageState createState() => _StarPageState();
 }
 
-class _OnboardingPageState1 extends State<OnboardingPage1> {
-  //   SQLite를 까서 봤을 때 계정이 없으면 첫실행으로 간주, 계정이 있으면 첫실행이 아닌걸로 간주
+class _StarPageState extends State<StartPage> {
+  Future<bool> checkFirstTime() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool firstTime = prefs.getBool('first_time');
+
+    if (firstTime != null && !firstTime) {
+      // Not first time
+      return false;
+    } else {
+      // First time
+      return true;
+    }
+  }
+
   final httpService = new HttpService();
 
   @override
   Widget build(BuildContext context) {
-    // httpService.getUserInfo();
-    // httpService.duplicateInspection("");
-    // httpService.createAccount(name: "이영범범", longitude: 0.0, latitude: 0.0);
+    //   SharedPreferences를 통해 첫 실행인지 비교
+    checkFirstTime().then((value) {
+      if (!value) {
+        //  첫 실행이 아니면 메인페이지로
+        Get.offAllNamed('/');
+      }
+    });
+
+    //  첫 실행이면 온보딩 실행
     return Scaffold(
       body: Center(
         child: renderFirstPage(),
@@ -24,10 +44,10 @@ class _OnboardingPageState1 extends State<OnboardingPage1> {
       bottomNavigationBar: BottomAppBar(
         child: Container(
           height: 55,
-          color: Colors.cyan,
+          color: ColorSet().pointColor,
           child: CupertinoButton(
             onPressed: () {
-              Get.toNamed('/onboardingPage2');
+              Get.toNamed('/onboardingPage');
             },
             child: Text(
               "확인",

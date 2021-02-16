@@ -5,6 +5,7 @@ import 'dart:isolate';
 
 import 'package:get/get.dart';
 import 'package:stay__home/controller/LocationController.dart';
+import 'package:stay__home/controller/UserController.dart';
 
 class TestPage extends StatefulWidget {
   TestPage({Key key, this.title}) : super(key: key);
@@ -21,7 +22,8 @@ class _TestPageState extends State<TestPage> {
   String notification = "";
   ReceivePort _receivePort;
 
-  var locationcontroller = Get.put(LoactionController());
+  var locationcontroller = Get.put(LocationController());
+  var userController = Get.put(UserController());
 
   void _start() async {
     _running = true;
@@ -66,6 +68,8 @@ class _TestPageState extends State<TestPage> {
 
   @override
   Widget build(BuildContext context) {
+    var name = userController.getName();
+    print(name);
     return new Scaffold(
       body: new Center(
         child: new Column(

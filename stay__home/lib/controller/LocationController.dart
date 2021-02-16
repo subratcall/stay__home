@@ -1,7 +1,7 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 
-class LoactionController extends GetxController {
+class LocationController extends GetxController {
   /*
    * GetBuilder 밖의 여러 곳에서 controller를 사용해야 하는 경우,
    * 간단하게 Controller 클래스 안의 getter로 접근할 수 있음.
@@ -12,7 +12,7 @@ class LoactionController extends GetxController {
    * 이 둘 간의 성능적 차이는 없으며, 문법적 차이로 오는 부ㅏㄱ용도 없다.
    * 단순히 하나는 type를 적을 필요가 없고, 다른 하나는 IDE가 자동완성 해준다는 차이점밖에 없음.
    */
-  // static LoactionController get to => Get.find();
+  // static LocationController get to => Get.find();
 
   Position position;
   RxBool isHome = false.obs;
@@ -25,6 +25,16 @@ class LoactionController extends GetxController {
 
   double latitudeData = 0;
   double longitudeData = 0;
+
+  double getHomeLatitude() => latitudeData;
+  double getHomeLongitude() => longitudeData;
+
+  String locationString = "";
+
+  setLocationString(String locationString) {
+    this.locationString = locationString;
+    update();
+  }
 
   getCurrentLocation() async {
     final geoPosition = await Geolocator.getCurrentPosition(

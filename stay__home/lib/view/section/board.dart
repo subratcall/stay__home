@@ -9,18 +9,8 @@ class SectionBoard extends StatelessWidget {
   final List<String> mainTextList = ['친구', '가족', '연인'];
   final dbController = DBController();
 
-  var user = User(
-    id: 0,
-    name: "홈밍이",
-    topTime: 0,
-    accTime: 0,
-    latitude: 0,
-    longitude: 0,
-  );
-
   @override
   Widget build(BuildContext context) {
-    mainTextList.sort();
     dbController.onInit();
     return Column(
       children: [

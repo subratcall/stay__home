@@ -13,7 +13,7 @@ class SectionDrawer extends StatefulWidget {
 
 class _SectionDrawerState extends State<SectionDrawer> {
   String nickname = '닉네임설정';
-  final controller = Get.put(LoactionController());
+  final controller = Get.put(LocationController());
 
   @override
   Widget build(BuildContext context) {

@@ -15,6 +15,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:stay__home/model/http/ModelDuplicateInspection.dart';
 
 class HttpService {
   HttpService();
@@ -60,20 +61,44 @@ class HttpService {
   }
 
   //  get
-  duplicateInspection(String name) async {
+  Future<bool> duplicateInspection(String name) async {
+    Map<String, dynamic> jsonToData;
+
     url = "http://15.164.195.117:3000/api/utils/DuplicateInspection";
     response = await dio.get(url, queryParameters: {"name": name});
-    print(response.data);
+    jsonToData = jsonDecode(response.data);
+    return jsonToData["success"];
   }
 
   //  post
-  createAccount({String name, double latitude, double longitude}) async {
+  Future<bool> createAccount(
+      {String name, double latitude, double longitude}) async {
+    Map<String, dynamic> jsonToData;
+
     url = "http://15.164.195.117:3000/api/users/createAccount";
     response = await dio.post(url, queryParameters: {
       "name": name,
       "latitude": latitude,
       "longitude": longitude
     });
+    jsonToData = jsonDecode(response.data);
     print(response.data.toString());
+    return jsonToData["success"];
+  }
+
+  Future<String> translateAddress({double latitude, double longitude}) async {
+    Map<String, dynamic> jsonToData;
+    url = "http://apis.vworld.kr/coord2new.do?";
+    response = await dio.get(url, queryParameters: {
+      "x": longitude,
+      "y": latitude,
+      "apiKey": "74F86569-69D2-3A9D-A217-CBBA729FEFB5",
+      "output": "json",
+      "epsg": "epsg:4326"
+    });
+    jsonToData = jsonDecode(response.data);
+    print(jsonToData["NEW_JUSO"]);
+
+    return jsonToData["NEW_JUSO"];
   }
 }

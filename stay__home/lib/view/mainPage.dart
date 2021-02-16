@@ -30,7 +30,7 @@ class _MainPageState extends State<MainPage> {
 
   DateTime virtualTime;
 
-  final locationcontroller = Get.put(LoactionController());
+  final locationcontroller = Get.put(LocationController());
   @override
   void initState() {
     super.initState();
@@ -112,7 +112,7 @@ class _MainPageState extends State<MainPage> {
                     ),
                   ],
                 ),
-                GetBuilder<LoactionController>(builder: (_) {
+                GetBuilder<LocationController>(builder: (_) {
                   return Column(
                     children: [
                       Text(_.homeLatitude.toString()),
