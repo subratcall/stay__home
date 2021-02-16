@@ -178,7 +178,7 @@ class _InputPageState extends State<InputPage> {
               if (_.longitudeData == 0.0 || _.latitudeData == 0.0) {
                 tileText = "클릭으로 위치를 지정해 주세요.";
               } else {
-                tileText = translateAddress == "" || null
+                tileText = translateAddress == "" || translateAddress == null
                     ? "${_.longitudeData.toString()}, ${_.latitudeData.toString()}"
                     : translateAddress;
                 //  translateAddress API 요청 오류나, 요청 초과가 이뤄진다면 생기는 에러에 대해 처리가 필요하다.
