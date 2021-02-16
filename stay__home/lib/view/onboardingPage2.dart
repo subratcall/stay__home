@@ -25,6 +25,7 @@ class _OnboardingPageState2 extends State<OnboardingPage2> {
   int resultTime;
 
   DateTime virtualTime;
+  AnimationController _controller;
 
   final locationcontroller = Get.put(LoactionController());
   @override
@@ -42,8 +43,7 @@ class _OnboardingPageState2 extends State<OnboardingPage2> {
         ),
         bottomNavigationBar: GetBuilder<LoactionController>(
           builder: (_) {
-            if (_.longitudeData != 0.0 ||
-                _.latitudeData != 0.0 ) {
+            if (_.longitudeData != 0.0 || _.latitudeData != 0.0) {
               isOk = true;
             } else {
               isOk = false;

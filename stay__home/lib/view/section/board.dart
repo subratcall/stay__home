@@ -6,7 +6,7 @@ class SectionBoard extends StatelessWidget {
   SectionBoard({this.title});
 
   final String title;
-  final List<String> mainTextList = ['친구', '가족', '연인'];
+  final List<String> mainTextList = ['친구를', '가족을', '연인을'];
   final dbController = DBController();
 
   var user = User(
@@ -26,32 +26,40 @@ class SectionBoard extends StatelessWidget {
       children: [
         Row(
           children: [
-            RaisedButton(
-              onPressed: () async {
-                // await dbController.insertUser(user);
-                print(await dbController.user());
-              },
-            ),
+            // RaisedButton(
+            //   onPressed: () async {
+            //     // await dbController.insertUser(user);
+            //     print(await dbController.user());
+            //   },
+            // ),
           ],
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 15),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               "${mainTextList[0]}",
-              style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontFamily: 'Nanum',
+                  fontSize: 23,
+                  fontWeight: FontWeight.bold),
             ),
             Text(
-              "를 위해 집에 있어 주세요",
-              style: TextStyle(fontSize: 18),
+              " 위해 집에 있어 주세요.",
+              style: TextStyle(
+                fontSize: 18,
+              ),
             ),
           ],
         ),
-        SizedBox(height: 30),
-        Text(
-          "🏡 Stay Home Challenge",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w200),
+        SizedBox(height: 45),
+        Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Text(
+            "# Stay Home Challenge",
+            style: TextStyle(fontSize: 25, fontWeight: FontWeight.w200),
+          ),
         ),
       ],
     );

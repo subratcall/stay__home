@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:stay__home/controller/TimeController.dart';
 import 'package:get/get.dart';
+import 'package:stay__home/controller/TimeController.dart';
 
 class SectionTimer extends StatefulWidget {
   @override
@@ -9,12 +9,13 @@ class SectionTimer extends StatefulWidget {
 
 class _SectionTimerState extends State<SectionTimer>
     with TickerProviderStateMixin {
-  final timerController = Get.put(TimeController());
+  final _timeController = Get.put(TimeController());
+  AnimationController _controller;
   int levelClock = 1800000;
 
   @override
   void dispose() {
-    TimeController().dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -22,7 +23,7 @@ class _SectionTimerState extends State<SectionTimer>
   void initState() {
     super.initState();
 
-    timerController.timercontroller = AnimationController(
+    _controller = AnimationController(
         vsync: this,
         duration: Duration(
             seconds:
@@ -34,8 +35,7 @@ class _SectionTimerState extends State<SectionTimer>
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<TimeController>(builder: (_) {
-      return Center(
+    return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -43,18 +43,18 @@ class _SectionTimerState extends State<SectionTimer>
             animation: StepTween(
               begin: 0, // THIS IS A USER ENTERED NUMBER
               end: levelClock,
-            ).animate(timerController.timercontroller),
+            ).animate(_controller),
           ),
           Row(
             children: [
-              RaisedButton(onPressed: () => timerController.startTimer()),
-              RaisedButton(onPressed: () => timerController.endTimer()),
+              // RaisedButton(onPressed: () => _controller.forward()),
+              // RaisedButton(onPressed: () => _controller.stop()),
             ],
           ),
         ],
       ),
     );
-  });
+  }
 }
 
 // ignore: must_be_immutable
@@ -67,19 +67,28 @@ class Countdown extends AnimatedWidget {
     Duration clockTimer = Duration(seconds: animation.value);
 
     String timerText =
-        '${(clockTimer.inDays).toString()}D:${(clockTimer.inHours.remainder(24)).toString().padLeft(2, '0')}H:${(clockTimer.inMinutes.remainder(60)).toString().padLeft(2, '0')}M';
+        '${(clockTimer.inDays).toString()}:${(clockTimer.inHours.remainder(24)).toString().padLeft(2, '0')}:${(clockTimer.inMinutes.remainder(60)).toString().padLeft(2, '0')}';
 
     print('animation.value  ${animation.value} ');
     // print('inMinutes ${clockTimer.inMinutes.toString()}');
     // print('inSeconds ${clockTimer.inSeconds.toString()}');
     // print(
     //     'inSeconds.remainder ${clockTimer.inSeconds.remainder(60).toString()}');
-    return Text(
-      "$timerText",
-      style: TextStyle(
-        fontSize: 50,
-        color: Colors.black,
-      ),
+    return Column(
+      children: [
+        Text(
+          "$timerText",
+          style: TextStyle(
+            fontSize: 75,
+            color: Colors.black,
+          ),
+        ),
+        Text(
+          clockTimer.inSeconds.remainder(60).toString() + ' s',
+          style: TextStyle(
+              fontSize: 15, color: Colors.black, fontWeight: FontWeight.w300),
+        )
+      ],
     );
   }
 }

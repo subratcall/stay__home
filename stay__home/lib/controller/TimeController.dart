@@ -4,14 +4,15 @@ import 'package:flutter/material.dart';
 class TimeController extends GetxController {
   static TimeController get to => Get.find();
 
-  bool timerState = true;
-  AnimationController timercontroller;
+  bool timerState = false;
 
   startTimer() {
-    timercontroller.forward();
+    timerState = true;
+    update();
   }
 
   endTimer() {
-    timercontroller.stop();
+    timerState = false;
+    update();
   }
 }

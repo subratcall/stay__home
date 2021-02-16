@@ -48,28 +48,28 @@ class _SectionDrawerState extends State<SectionDrawer> {
             ),
           ),
           ListTile(
-            leading: Icon(Icons.location_on_outlined),
-            title: Text('집 설정'),
+            // leading: Icon(Icons.location_on_outlined),
+            title: Text('   집 설정'),
             onTap: () {
               print("집 설정");
             },
           ),
           ListTile(
-            leading: Icon(
-              Icons.ios_share,
-              color: Colors.black54,
-            ),
-            title: Text('공유하기'),
+            // leading: Icon(
+            //   Icons.ios_share,
+            //   color: Colors.black54,
+            // ),
+            title: Text('   공유하기'),
             onTap: () {
               print("공유하기");
             },
           ),
           ListTile(
-            leading: Icon(
-              Icons.mail_outline,
-              color: Colors.black54,
-            ),
-            title: Text('문의하기'),
+            // leading: Icon(
+            //   Icons.mail_outline,
+            //   color: Colors.black54,
+            // ),
+            title: Text('   문의하기'),
             onTap: () {
               NAlertDialog(
                 title: Text("Test"),
