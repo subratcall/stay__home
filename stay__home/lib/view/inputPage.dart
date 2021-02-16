@@ -11,7 +11,8 @@ class OnboardingPage2 extends StatefulWidget {
 }
 
 class _OnboardingPageState2 extends State<OnboardingPage2> {
-  bool isOk = false;
+  bool isOk1 = false;
+  bool isOk2 = false;
   int state = 0;
   String tileText;
   final _formKey = GlobalKey<FormState>();
@@ -25,13 +26,13 @@ class _OnboardingPageState2 extends State<OnboardingPage2> {
   int resultTime;
 
   DateTime virtualTime;
-  AnimationController _controller;
 
   final locationcontroller = Get.put(LoactionController());
   @override
   void initState() {
     super.initState();
-    isOk = false;
+    isOk1 = false;
+    isOk2 = false;
     locationcontroller.determinePosition();
   }
 
@@ -44,17 +45,17 @@ class _OnboardingPageState2 extends State<OnboardingPage2> {
         bottomNavigationBar: GetBuilder<LoactionController>(
           builder: (_) {
             if (_.longitudeData != 0.0 || _.latitudeData != 0.0) {
-              isOk = true;
+              isOk1 = true;
             } else {
-              isOk = false;
+              isOk1 = false;
             }
             return BottomAppBar(
               child: Container(
                 height: 55,
-                color: isOk ? Colors.cyan : Colors.grey,
+                color: (isOk1 && isOk2) ? Color(0xFF2b90d9) : Colors.grey,
                 child: CupertinoButton(
                   disabledColor: Colors.grey,
-                  onPressed: isOk
+                  onPressed: (isOk1 && isOk2)
                       ? () {
                           Get.toNamed('/');
                         }
@@ -76,28 +77,24 @@ class _OnboardingPageState2 extends State<OnboardingPage2> {
   Widget renderSecondPage() {
     return Container(
       alignment: Alignment.center,
-      child: state == 0
-          ? Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                renderTitle("사용하실 닉네임을 입력해 주세요"),
-                SizedBox(
-                  height: 20,
-                ),
-                renderNameForm(),
-              ],
-            )
-          : Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                renderTitle("집의 위치를 설정해주세요"),
-                SizedBox(
-                  height: 20,
-                ),
-                renderLocation(),
-              ],
-            ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          renderTitle("사용하실 닉네임을 입력해 주세요"),
+          SizedBox(
+            height: 20,
+          ),
+          renderNameForm(),
+          SizedBox(
+            height: 20,
+          ),
+          renderTitle("집의 위치를 설정해주세요"),
+          SizedBox(
+            height: 20,
+          ),
+          renderLocation(),
+        ],
+      ),
     );
   }
 
@@ -107,7 +104,7 @@ class _OnboardingPageState2 extends State<OnboardingPage2> {
       child: Container(
         width: 300,
         decoration: BoxDecoration(
-          color: Colors.cyan,
+          color: Color(0xFF2b90d9),
           borderRadius: BorderRadius.circular(20),
         ),
         child: ListTile(
@@ -153,7 +150,7 @@ class _OnboardingPageState2 extends State<OnboardingPage2> {
           text,
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 25,
+            fontSize: 22,
           ),
         ),
       ),
@@ -171,7 +168,7 @@ class _OnboardingPageState2 extends State<OnboardingPage2> {
             child: Container(
               width: Get.size.width * 0.5,
               child: TextFormField(
-                style: TextStyle(fontSize: 30),
+                style: TextStyle(fontSize: 22),
                 // 텍스트폼필드에 validator 추가
                 validator: (value) {
                   // 입력값이 없으면 메시지 출력
@@ -197,12 +194,13 @@ class _OnboardingPageState2 extends State<OnboardingPage2> {
               width: 100,
               height: 70,
               child: FlatButton(
-                color: Colors.cyan,
+                color: Color(0xFF2b90d9),
                 onPressed: () {
                   // 텍스트폼필드의 상태가 적함하는
                   if (_formKey.currentState.validate()) {
                     // 스낵바를 통해 메시지 출력
                     // Get.snackbar("title", "message");
+                    isOk2 = true;
                     setState(() {
                       state = 1;
                     });

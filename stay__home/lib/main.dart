@@ -7,7 +7,8 @@ import 'package:get/get.dart';
 import 'package:stay__home/controller/LocationController.dart';
 import 'package:stay__home/view/mainPage.dart';
 import 'package:stay__home/view/onboardingPage1.dart';
-import 'package:stay__home/view/onboardingPage2.dart';
+import 'package:stay__home/view/inputPage.dart';
+import 'package:stay__home/view/onboardingPage.dart';
 import 'package:stay__home/view/testPage.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -59,7 +60,7 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       // initialRoute: '/onboardingPage1',
-      initialRoute: '/testPage',
+      initialRoute: '/onboardingPage',
       getPages: [
         GetPage(
           name: '/',
@@ -79,6 +80,11 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: '/testPage',
           page: () => TestPage(),
+          transition: Transition.fadeIn,
+        ),
+        GetPage(
+          name: '/onboardingPage',
+          page: () => OnBoardingPage(),
           transition: Transition.fadeIn,
         ),
       ],
