@@ -15,6 +15,7 @@ import 'package:stay__home/view/startPage.dart';
 import 'package:stay__home/view/testPage.dart';
 import 'package:stay__home/view/rankingPage.dart';
 import 'package:workmanager/workmanager.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const fetchBackground = "fetchBackground";
@@ -131,14 +132,21 @@ class Splash extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               SizedBox(
-                height: Get.size.height * 0.15,
+                height: Get.size.height * 0.2,
               ),
-              Text(
-                "#StayHome",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 55,
-                    fontWeight: FontWeight.w400),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(5, 0, 90, 0),
+                child: Container(
+                  height: Get.size.height * 0.2,
+                  child: AutoSizeText(
+                    "#StayHome",
+                    maxLines: 1,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 50,
+                        fontWeight: FontWeight.w400),
+                  ),
+                ),
               ),
             ],
           ),
