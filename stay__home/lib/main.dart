@@ -13,6 +13,7 @@ import 'package:stay__home/view/inputPage.dart';
 import 'package:stay__home/view/onboarding.dart';
 import 'package:stay__home/view/startPage.dart';
 import 'package:stay__home/view/testPage.dart';
+import 'package:stay__home/view/rankingPage.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -79,7 +80,7 @@ class MyApp extends StatelessWidget {
               primarySwatch: Colors.grey,
               visualDensity: VisualDensity.adaptivePlatformDensity,
             ),
-            initialRoute: '/onboardingPage',
+            initialRoute: '/startPage',
             getPages: [
               GetPage(
                 name: '/',
@@ -98,6 +99,11 @@ class MyApp extends StatelessWidget {
               GetPage(
                 name: '/inputPage',
                 page: () => InputPage(),
+                transition: Transition.fadeIn,
+              ),
+              GetPage(
+                name: '/rankingPage',
+                page: () => RankingPage(),
                 transition: Transition.fadeIn,
               ),
               GetPage(
