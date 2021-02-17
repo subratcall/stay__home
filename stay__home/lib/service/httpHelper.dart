@@ -15,7 +15,10 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:stay__home/model/http/ModelDuplicateInspection.dart';
+import 'package:stay__home/model/http/ModelGetUserInfo.dart';
+import 'package:stay__home/model/uesr.dart';
 
 class HttpService {
   HttpService();
@@ -32,17 +35,39 @@ class HttpService {
   }
 
   //  get
-  getUserInfo() async {
+  Future<GetUserInfo> getUserInfo({
+    @required String name,
+  }) async {
+    var jsonToData;
+    url = "http://15.164.195.117:3000/api/users/getUserInfo";
+    response = await dio.get(url, queryParameters: {"name": name});
+
+    jsonToData = jsonDecode(response.data);
+    return GetUserInfo.fromJson(jsonToData);
+  }
+
+  getUserInfo2({
+    @required String name,
+  }) async {
+    Map<String, dynamic> jsonToData;
     url = "http://15.164.195.117:3000/api/users/getUserInfo";
     response = await dio.get(url, queryParameters: {"name": "이영범"});
-    responseList = json.decode(response.data);
 
-    print(response.data.toString());
+    jsonToData = jsonDecode(response.data);
+    print(jsonToData);
   }
 
   //  post
-  updateName() async {
+  Future<bool> updateName({
+    @required String beforeName,
+    @required String afterName,
+  }) async {
+    Map<String, dynamic> jsonToData;
     url = "http://15.164.195.117:3000/api/users/updateName";
+    response = await dio.post(url,
+        queryParameters: {"beforeName": beforeName, "afterName": afterName});
+    jsonToData = jsonDecode(response.data);
+    return jsonToData["success"];
   }
 
   //  post
@@ -51,13 +76,34 @@ class HttpService {
   }
 
   //  post
-  updateHomeAddress() async {
+  Future<bool> updateHomeAddress(
+      {@required String name,
+      @required double latitude,
+      @required double longitude}) async {
+    Map<String, dynamic> jsonToData;
     url = "http://15.164.195.117:3000/api/utils/updateHomeAddress";
+    response = await dio.post(url, queryParameters: {
+      "name": name,
+      "latitude": latitude,
+      "longitude": longitude,
+    });
+    jsonToData = jsonDecode(response.data);
+    return jsonToData["success"];
   }
 
   //  post
-  insertAccTime() async {
+  Future<bool> insertAccTime({
+    @required String name,
+    @required double resultTime,
+  }) async {
+    Map<String, dynamic> jsonToData;
     url = "http://15.164.195.117:3000/api/utils/insertAccTime";
+    response = await dio.post(url, queryParameters: {
+      "name": name,
+      "resultTime": resultTime,
+    });
+    jsonToData = jsonDecode(response.data);
+    return jsonToData["success"];
   }
 
   //  get
@@ -65,28 +111,36 @@ class HttpService {
     Map<String, dynamic> jsonToData;
 
     url = "http://15.164.195.117:3000/api/utils/DuplicateInspection";
-    response = await dio.get(url, queryParameters: {"name": name});
+    response = await dio.get(url, queryParameters: {
+      "name": name,
+    });
     jsonToData = jsonDecode(response.data);
     return jsonToData["success"];
   }
 
   //  post
-  Future<bool> createAccount(
-      {String name, double latitude, double longitude}) async {
+  Future<bool> createAccount({
+    @required String name,
+    @required double latitude,
+    @required double longitude,
+  }) async {
     Map<String, dynamic> jsonToData;
 
     url = "http://15.164.195.117:3000/api/users/createAccount";
     response = await dio.post(url, queryParameters: {
       "name": name,
       "latitude": latitude,
-      "longitude": longitude
+      "longitude": longitude,
     });
     jsonToData = jsonDecode(response.data);
     print(response.data.toString());
     return jsonToData["success"];
   }
 
-  Future<String> translateAddress({double latitude, double longitude}) async {
+  Future<String> translateAddress({
+    @required double latitude,
+    @required double longitude,
+  }) async {
     Map<String, dynamic> jsonToData;
     url = "http://apis.vworld.kr/coord2new.do?";
     response = await dio.get(url, queryParameters: {
@@ -94,7 +148,7 @@ class HttpService {
       "y": latitude,
       "apiKey": "74F86569-69D2-3A9D-A217-CBBA729FEFB5",
       "output": "json",
-      "epsg": "epsg:4326"
+      "epsg": "epsg:4326",
     });
     jsonToData = jsonDecode(response.data);
     print(jsonToData["NEW_JUSO"]);
