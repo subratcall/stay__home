@@ -38,6 +38,21 @@ void callbackDispatcher() {
   });
 }
 
+//   SharedPreferences를 통해 첫 실행인지 비교
+//  첫 실행이면 온보딩 실행
+Future<bool> checkFirstTime() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  bool firstTime = prefs.getBool('first_time');
+
+  if (firstTime != null && !firstTime) {
+    // Not first time
+    return false;
+  } else {
+    // First time
+    return true;
+  }
+}
+
 void main() async {
   /*
    * Flutter WorkManager 초기 세팅
@@ -52,13 +67,27 @@ void main() async {
   Workmanager.registerPeriodicTask("1", fetchBackground,
       frequency: Duration(minutes: 15), initialDelay: Duration(minutes: 1));
   dbController.onInit();
-  // print(await dbController.user());
-  runApp(MyApp());
+
+  checkFirstTime().then((value) {
+    if (value) {
+      //  첫 실행이면
+      runApp(MyApp(
+        route: '/startPage',
+      ));
+    } else {
+      //  첫 실행이 아니면
+      runApp(MyApp(
+        route: '/',
+      ));
+    }
+  });
 }
 
-// ignore: must_be_immutable
 class MyApp extends StatelessWidget {
   final locationController = Get.put(LocationController());
+  final String route;
+
+  MyApp({@required this.route});
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +108,7 @@ class MyApp extends StatelessWidget {
               primarySwatch: Colors.grey,
               visualDensity: VisualDensity.adaptivePlatformDensity,
             ),
-            initialRoute: '/startPage',
+            initialRoute: this.route,
             getPages: [
               GetPage(
                 name: '/',
