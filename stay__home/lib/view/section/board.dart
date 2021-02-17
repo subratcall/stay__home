@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:stay__home/controller/LocationController.dart';
 import 'package:stay__home/model/uesr.dart';
 import 'package:stay__home/service/databaseHelper.dart';
+import 'package:stay__home/service/httpHelper.dart';
 
 class SectionBoard extends StatelessWidget {
   SectionBoard({this.title});
@@ -8,6 +11,7 @@ class SectionBoard extends StatelessWidget {
   final String title;
   final List<String> mainTextList = ['친구', '가족', '연인'];
   final dbController = DBController();
+  final locationController = Get.put(LocationController());
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +22,10 @@ class SectionBoard extends StatelessWidget {
           children: [
             RaisedButton(
               onPressed: () async {
-                // await dbController.insertUser(user);
-                print(await dbController.user());
+                HttpService().getUserInfo(name: "이영범범").then((value) {
+                  print(value.data.name);
+                });
+                // HttpService().getUserInfo2(name: "이영범범");
               },
             ),
           ],

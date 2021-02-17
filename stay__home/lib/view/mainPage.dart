@@ -1,9 +1,12 @@
+import 'dart:typed_data';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:stay__home/controller/LocationController.dart';
+import 'package:stay__home/main.dart';
 import 'package:stay__home/view/section/board.dart';
 import 'package:stay__home/view/section/drawer.dart';
 import 'package:stay__home/view/section/timer.dart';
@@ -18,37 +21,13 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  String showText;
-  Position position;
-
-  String latitudeData = "";
-  String longitudeData = "";
-
-  DateTime startTime;
-  DateTime endTime;
-  int resultTime;
-
-  DateTime virtualTime;
-
   final locationcontroller = Get.put(LocationController());
+
   @override
   void initState() {
     super.initState();
     locationcontroller.determinePosition();
     locationcontroller.getCurrentLocation();
-  }
-
-  startTimer() {
-    startTime = DateTime.now();
-
-    print("Start Time: " + startTime.toString());
-  }
-
-  endTimer() {
-    endTime = DateTime.now();
-    resultTime = (-(startTime.difference(endTime)).inSeconds);
-    print("End Time: " + endTime.toString());
-    print("Result Second: " + resultTime.toString());
   }
 
   @override
@@ -57,6 +36,9 @@ class _MainPageState extends State<MainPage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0.0,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
       ),
       drawer: SectionDrawer(),
       body: Container(
@@ -67,88 +49,8 @@ class _MainPageState extends State<MainPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                // _buildLocateButton(),
                 SectionBoard(),
                 SectionTimer(),
-                // _builcAddButton(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    OutlineButton(
-                      onPressed: () {
-                        startTimer();
-                      },
-                      child: Text("시작"),
-                    ),
-                    OutlineButton(
-                      onPressed: () {
-                        endTimer();
-                      },
-                      child: Text("종료"),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    OutlineButton(
-                      onPressed: () {
-                        locationcontroller.setHome();
-                      },
-                      child: Text("집 설정"),
-                    ),
-                    OutlineButton(
-                      onPressed: () {
-                        locationcontroller.checkLocation();
-                      },
-                      child: Text("체크"),
-                    ),
-                    OutlineButton(
-                      onPressed: () {
-                        // Https()
-                        // .getHttp("http://15.164.195.117:3000/api/utils/");
-                      },
-                      child: Text("Http 통신"),
-                    ),
-                  ],
-                ),
-                GetBuilder<LocationController>(builder: (_) {
-                  return Column(
-                    children: [
-                      Text(_.homeLatitude.toString()),
-                      Text(_.homeLongitude.toString()),
-                      Center(
-                        child: _.isHome.value
-                            ? Container(
-                                width: 150,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                    color: Colors.green,
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Center(
-                                  child: Text(
-                                    "현재 집입니다",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              )
-                            : Container(
-                                width: 150,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                    color: Colors.red,
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Center(
-                                  child: Text(
-                                    "현재 집이 아닙니다.",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                      ),
-                    ],
-                  );
-                }),
               ],
             ),
           ),

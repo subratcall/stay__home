@@ -11,32 +11,10 @@ class StartPage extends StatefulWidget {
 }
 
 class _StarPageState extends State<StartPage> {
-  Future<bool> checkFirstTime() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool firstTime = prefs.getBool('first_time');
-
-    if (firstTime != null && !firstTime) {
-      // Not first time
-      return false;
-    } else {
-      // First time
-      return true;
-    }
-  }
-
   final httpService = new HttpService();
 
   @override
   Widget build(BuildContext context) {
-    //   SharedPreferences를 통해 첫 실행인지 비교
-    checkFirstTime().then((value) {
-      if (!value) {
-        //  첫 실행이 아니면 메인페이지로
-        Get.offAllNamed('/');
-      }
-    });
-
-    //  첫 실행이면 온보딩 실행
     return Scaffold(
       body: Center(
         child: renderFirstPage(),
