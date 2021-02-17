@@ -138,7 +138,7 @@ class _InputPageState extends State<InputPage> {
             ),
             renderNameForm(),
             SizedBox(
-              height: 100,
+              height: 50,
             ),
             renderTitle("집의 위치를 설정해주세요"),
             SizedBox(

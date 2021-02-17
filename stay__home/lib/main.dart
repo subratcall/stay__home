@@ -79,7 +79,7 @@ class MyApp extends StatelessWidget {
               primarySwatch: Colors.grey,
               visualDensity: VisualDensity.adaptivePlatformDensity,
             ),
-            initialRoute: '/startPage',
+            initialRoute: '/onboardingPage',
             getPages: [
               GetPage(
                 name: '/',
