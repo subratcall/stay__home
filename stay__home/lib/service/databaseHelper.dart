@@ -53,6 +53,7 @@ class DBController {
   var database;
 
   void onInit() async {
+    print("DBinit");
     database = openDatabase(
       join(await getDatabasesPath(), 'stayHome_database.db'),
       onCreate: (db, version) {

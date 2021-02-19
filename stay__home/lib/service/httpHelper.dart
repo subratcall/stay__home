@@ -46,17 +46,6 @@ class HttpService {
     return GetUserInfo.fromJson(jsonToData);
   }
 
-  getUserInfo2({
-    @required String name,
-  }) async {
-    Map<String, dynamic> jsonToData;
-    url = "http://15.164.195.117:3000/api/users/getUserInfo";
-    response = await dio.get(url, queryParameters: {"name": "이영범"});
-
-    jsonToData = jsonDecode(response.data);
-    print(jsonToData);
-  }
-
   //  post
   Future<bool> updateName({
     @required String beforeName,
@@ -92,15 +81,15 @@ class HttpService {
   }
 
   //  post
-  Future<bool> insertAccTime({
+  Future<bool> updateTime({
     @required String name,
-    @required double resultTime,
+    @required double time,
   }) async {
     Map<String, dynamic> jsonToData;
-    url = "http://15.164.195.117:3000/api/utils/insertAccTime";
+    url = "http://15.164.195.117:3000/api/utils/updateTime";
     response = await dio.post(url, queryParameters: {
       "name": name,
-      "resultTime": resultTime,
+      "time": time,
     });
     jsonToData = jsonDecode(response.data);
     return jsonToData["success"];
