@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stay__home/controller/LocationController.dart';
+import 'package:stay__home/service/databaseHelper.dart';
 import 'package:stay__home/view/mainPage.dart';
 import 'package:stay__home/service/httpHelper.dart';
 // import 'package:screenshot_share/screenshot_share.dart';
@@ -12,8 +13,20 @@ class SectionDrawer extends StatefulWidget {
 }
 
 class _SectionDrawerState extends State<SectionDrawer> {
-  String nickname = '닉네임설정';
-  final controller = Get.put(LocationController());
+  String nickname;
+  final dbController = DBController();
+
+  @override
+  void initState() {
+    dbController.onInit();
+    super.initState();
+  }
+
+  getUserName() {
+    dbController.user().then((value) {
+      return value[0].name;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +42,7 @@ class _SectionDrawerState extends State<SectionDrawer> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      nickname,
+                      getUserName(),
                       style: TextStyle(fontSize: 30),
                     ),
                     SizedBox(
@@ -37,10 +50,7 @@ class _SectionDrawerState extends State<SectionDrawer> {
                     ),
                     InkWell(
                       child: Icon(Icons.edit),
-                      onTap: () {
-                        controller.setHome();
-                        print("닉네임 변경");
-                      },
+                      onTap: () {},
                     ),
                   ],
                 )
@@ -48,27 +58,21 @@ class _SectionDrawerState extends State<SectionDrawer> {
             ),
           ),
           ListTile(
-            leading: Icon(Icons.location_on_outlined),
             title: Text('집 설정'),
             onTap: () {
+              //  유저 현재 위도 경도를 받아서
+              //  서버 업데이트
+              //  DB 업데이트
               print("집 설정");
             },
           ),
           ListTile(
-            leading: Icon(
-              Icons.ios_share,
-              color: Colors.black54,
-            ),
             title: Text('공유하기'),
             onTap: () {
               print("공유하기");
             },
           ),
           ListTile(
-            leading: Icon(
-              Icons.mail_outline,
-              color: Colors.black54,
-            ),
             title: Text('문의하기'),
             onTap: () {
               NAlertDialog(

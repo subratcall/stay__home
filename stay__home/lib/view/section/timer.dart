@@ -4,10 +4,15 @@ import 'package:geolocator/geolocator.dart';
 import 'dart:isolate';
 
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stay__home/controller/LocationController.dart';
 import 'package:stay__home/controller/UserController.dart';
+import 'package:stay__home/design/ColorSet.dart';
 import 'package:stay__home/main.dart';
+import 'package:stay__home/model/uesr.dart';
 import 'package:stay__home/service/databaseHelper.dart';
+import 'package:stay__home/service/httpHelper.dart';
 
 class SectionTimer extends StatefulWidget {
   SectionTimer({Key key, this.title}) : super(key: key);
@@ -37,11 +42,17 @@ class _SectionTimerState extends State<SectionTimer> {
   var userController = Get.put(UserController());
   var dbController = DBController();
 
+  DateTime getStartTimePrefsDateTime;
+  double sendSecond;
+  double displaySecond;
+  String startTimePrefs;
+
   @override
   void initState() {
     _start();
     _running = true;
     dbController.onInit();
+
     super.initState();
   }
 
@@ -58,48 +69,109 @@ class _SectionTimerState extends State<SectionTimer> {
     Timer.periodic(new Duration(seconds: 1), (Timer t) async {
       _counter++;
       String msg = 'notification ' + _counter.toString();
-      print('SEND: ' + msg);
       sendPort.send(msg);
     });
   }
 
   void _handleMessage(dynamic data) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    startTimePrefs = prefs.getString('start_time');
     Position userLocation = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
-    await dbController.user().then((value) {
-      if (userLocation.latitude > value[0].latitude + 0.00100 ||
-          userLocation.latitude < value[0].latitude - 0.00100 ||
-          userLocation.longitude > value[0].longitude + 0.00100 ||
-          userLocation.longitude < value[0].longitude - 0.00100) {
-        print("집이 아닙니다.");
-        isHome = false;
+    try {
+      await dbController.user().then((value) {
+        //  SQlite의 User Data의 집주소와 현재 위치를 비교
+        //  집이 아닌 경우
+        if (userLocation.latitude > value[0].latitude + 0.00100 ||
+            userLocation.latitude < value[0].latitude - 0.00100 ||
+            userLocation.longitude > value[0].longitude + 0.00100 ||
+            userLocation.longitude < value[0].longitude - 0.00100) {
+          //  시작 시간이 비어있지 않으면, 타이머가 작동하고 있다는 의미
+          if (startTimePrefs != "") {
+            //  getStartTimePrefsDataTime에 Prefs의 start_time값을 파싱해 DateTime 형식으로 바꿈
+
+            getStartTimePrefsDateTime = DateFormat("yyyy-MM-dd hh:mm:ss")
+                .parse(prefs.getString("start_time"));
+
+            //  서버에 보낼 시간을 계산함.
+            sendSecond = DateTime.now()
+                .difference(getStartTimePrefsDateTime)
+                .inSeconds
+                .toDouble();
+
+            //  SQlite의 User Data를 기반으로 서버에 시간을 전송후 SQlite의 재저장
+            dbController.user().then((localUser) {
+              HttpService()
+                  .updateTime(name: localUser[0].name, time: sendSecond);
+              HttpService()
+                  .getUserInfo(name: localUser[0].name)
+                  .then((serverUser) {
+                dbController
+                    .updateUser(User(
+                  id: 0,
+                  name: serverUser.data.name,
+                  accTime: serverUser.data.accTime,
+                  topTime: serverUser.data.topTime,
+                  latitude: serverUser.data.latitude,
+                  longitude: serverUser.data.longitude,
+                ))
+                    .then((_) async {
+                  print("업뎃 완료");
+                  print(await dbController.user());
+                });
+              });
+            });
+            prefs.setString('start_time', "");
+          }
+          prefs.setString('start_time', "");
+          print("집이 아닙니다.");
+          isHome = false;
+        } else {
+          //  집인 경우
+          if (startTimePrefs == "" || startTimePrefs == null) {
+            prefs.setString('start_time', DateTime.now().toString());
+          }
+
+          // Display 용 계산
+          getStartTimePrefsDateTime = DateFormat("yyyy-MM-dd hh:mm:ss")
+              .parse(prefs.getString("start_time"));
+
+          //  서버에 보낼 시간을 계산함.
+          displaySecond = DateTime.now()
+              .difference(getStartTimePrefsDateTime)
+              .inSeconds
+              .toDouble();
+          print("집입니다.");
+          isHome = true;
+        }
+      });
+      if (isHome) {
+        setState(() {
+          noti = data;
+          count = displaySecond;
+          second = count;
+
+          minute = count / 60;
+          hour = minute / 60;
+          day = hour / 24;
+
+          hour %= 24;
+          minute %= 60;
+          second %= 60;
+        });
       } else {
-        print("집입니다.");
-        isHome = true;
+        setState(() {
+          second = 0;
+          minute = 0;
+          hour = 0;
+          day = 0;
+          count = 0;
+        });
       }
-    });
-
-    print('RECEIVED: ' + data);
-
-    if (isHome) {
-      setState(() {
-        noti = data;
-        count++;
-        second = count;
-
-        minute = count / 60;
-        hour = minute / 60;
-        day = hour / 24;
-
-        hour %= 24;
-        minute %= 60;
-        second %= 60;
-      });
-    } else {
-      setState(() {
-        second = 0;
-        count = 0;
-      });
+    } catch (e) {
+      Get.snackbar("오류", "오류메세지 $e",
+          colorText: ColorSet().lightColor,
+          backgroundColor: ColorSet().pointColor);
     }
   }
 
@@ -115,18 +187,48 @@ class _SectionTimerState extends State<SectionTimer> {
     }
   }
 
-  sendData() {}
+  void sendData(var data) {
+    print(data);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return new Center(
-      child: new Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          new Text(
-            "${day.toInt()}일 ${hour.toInt()}시간 ${minute.toInt()}분 ${second.toInt()}초",
+    return Padding(
+      padding: const EdgeInsets.all(15.0),
+      child: Card(
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        elevation: 0.0,
+        child: Center(
+          child: Container(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  width: Get.size.width * 0.8,
+                  height: Get.size.width * 0.3,
+                  child: FittedBox(
+                    fit: BoxFit.contain,
+                    child: Text(
+                      day.toInt() > 0
+                          ? "${day.toInt()}:${hour.toInt()}:${minute.toInt()}:${second.toInt()}"
+                          : hour.toInt() > 0
+                              ? "${hour.toInt()}:${minute.toInt()}:${second.toInt()}"
+                              : minute.toInt() > 0
+                                  ? "${minute.toInt()}:${second.toInt()}"
+                                  : "${second.toInt()}",
+                      style: TextStyle(
+                          color: ColorSet().pointColor,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ],
+        ),
       ),
     );
   }

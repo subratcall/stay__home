@@ -100,7 +100,8 @@ class _InputPageState extends State<InputPage> {
                               SharedPreferences prefs =
                                   await SharedPreferences.getInstance();
                               prefs.setBool('first_time', false);
-
+                              prefs.setDouble('local_time', 0);
+                              prefs.setString('start_time', "");
                               Get.toNamed('/');
                             } else {
                               //  계정 생성 오류

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:stay__home/controller/LocationController.dart';
+import 'package:stay__home/design/ColorSet.dart';
 import 'package:stay__home/main.dart';
 import 'package:stay__home/view/section/board.dart';
 import 'package:stay__home/view/section/drawer.dart';
@@ -33,24 +34,25 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorSet().pointColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
         elevation: 0.0,
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       drawer: SectionDrawer(),
       body: Container(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
           child: Container(
-            color: Colors.white,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                SectionBoard(),
                 SectionTimer(),
+                SizedBox(
+                  height: 80,
+                ),
+                SectionBoard(),
               ],
             ),
           ),
