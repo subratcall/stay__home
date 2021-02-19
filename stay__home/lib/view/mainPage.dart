@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:stay__home/controller/LocationController.dart';
+import 'package:stay__home/design/ColorSet.dart';
 import 'package:stay__home/view/section/board.dart';
 import 'package:stay__home/view/section/drawer.dart';
 import 'package:stay__home/view/section/timer.dart';
@@ -55,100 +56,101 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: ColorSet().lightColor,
         elevation: 0.0,
       ),
       drawer: SectionDrawer(),
       body: Container(
+        color: ColorSet().lightColor,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
           child: Container(
-            color: Colors.white,
+            color: ColorSet().lightColor,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 // _buildLocateButton(),
-                SectionBoard(),
                 SectionTimer(),
+                SectionBoard(),
                 // _builcAddButton(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    OutlineButton(
-                      onPressed: () {
-                        startTimer();
-                      },
-                      child: Text("시작"),
-                    ),
-                    OutlineButton(
-                      onPressed: () {
-                        endTimer();
-                      },
-                      child: Text("종료"),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    OutlineButton(
-                      onPressed: () {
-                        locationcontroller.setHome();
-                      },
-                      child: Text("집 설정"),
-                    ),
-                    OutlineButton(
-                      onPressed: () {
-                        locationcontroller.checkLocation();
-                      },
-                      child: Text("체크"),
-                    ),
-                    OutlineButton(
-                      onPressed: () {
-                        // Https()
-                        // .getHttp("http://15.164.195.117:3000/api/utils/");
-                      },
-                      child: Text("Http 통신"),
-                    ),
-                  ],
-                ),
-                GetBuilder<LocationController>(builder: (_) {
-                  return Column(
-                    children: [
-                      Text(_.homeLatitude.toString()),
-                      Text(_.homeLongitude.toString()),
-                      Center(
-                        child: _.isHome.value
-                            ? Container(
-                                width: 150,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                    color: Colors.green,
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Center(
-                                  child: Text(
-                                    "현재 집입니다",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              )
-                            : Container(
-                                width: 150,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                    color: Colors.red,
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Center(
-                                  child: Text(
-                                    "현재 집이 아닙니다.",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                      ),
-                    ],
-                  );
-                }),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     OutlineButton(
+                //       onPressed: () {
+                //         startTimer();
+                //       },
+                //       child: Text("시작"),
+                //     ),
+                //     OutlineButton(
+                //       onPressed: () {
+                //         endTimer();
+                //       },
+                //       child: Text("종료"),
+                //     ),
+                //   ],
+                // ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     OutlineButton(
+                //       onPressed: () {
+                //         locationcontroller.setHome();
+                //       },
+                //       child: Text("집 설정"),
+                //     ),
+                //     OutlineButton(
+                //       onPressed: () {
+                //         locationcontroller.checkLocation();
+                //       },
+                //       child: Text("체크"),
+                //     ),
+                //     OutlineButton(
+                //       onPressed: () {
+                //         // Https()
+                //         // .getHttp("http://15.164.195.117:3000/api/utils/");
+                //       },
+                //       child: Text("Http 통신"),
+                //     ),
+                //   ],
+                // ),
+                // GetBuilder<LocationController>(builder: (_) {
+                //   return Column(
+                //     children: [
+                //       Text(_.homeLatitude.toString()),
+                //       Text(_.homeLongitude.toString()),
+                //       Center(
+                //         child: _.isHome.value
+                //             ? Container(
+                //                 width: 150,
+                //                 height: 50,
+                //                 decoration: BoxDecoration(
+                //                     color: Colors.green,
+                //                     borderRadius: BorderRadius.circular(10)),
+                //                 child: Center(
+                //                   child: Text(
+                //                     "현재 집입니다",
+                //                     style: TextStyle(color: Colors.white),
+                //                   ),
+                //                 ),
+                //               )
+                //             : Container(
+                //                 width: 150,
+                //                 height: 50,
+                //                 decoration: BoxDecoration(
+                //                     color: Colors.red,
+                //                     borderRadius: BorderRadius.circular(10)),
+                //                 child: Center(
+                //                   child: Text(
+                //                     "현재 집이 아닙니다.",
+                //                     style: TextStyle(color: Colors.white),
+                //                   ),
+                //                 ),
+                //               ),
+                //       ),
+                //     ],
+                //   );
+                // }),
               ],
             ),
           ),

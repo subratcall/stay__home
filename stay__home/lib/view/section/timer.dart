@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stay__home/design/ColorSet.dart';
 
 class SectionTimer extends StatefulWidget {
   @override
@@ -42,12 +43,14 @@ class _SectionTimerState extends State<SectionTimer>
               end: levelClock,
             ).animate(_controller),
           ),
-          Row(
-            children: [
-              RaisedButton(onPressed: () => _controller.forward()),
-              RaisedButton(onPressed: () => _controller.stop()),
-            ],
-          ),
+
+          SizedBox(height: 100)
+          // // Row(
+          // //   children: [
+          // //     RaisedButton(onPressed: () => _controller.forward()),
+          // //     RaisedButton(onPressed: () => _controller.stop()),
+          // //   ],
+          // ),
         ],
       ),
     );
@@ -64,19 +67,30 @@ class Countdown extends AnimatedWidget {
     Duration clockTimer = Duration(seconds: animation.value);
 
     String timerText =
-        '${clockTimer.inMinutes.remainder(60).toString()}:${clockTimer.inSeconds.remainder(60).toString().padLeft(2, '0')}';
+        '${clockTimer.inDays.toString()}:${clockTimer.inHours.remainder(24).toString().padLeft(2, '0')}:${clockTimer.inMinutes.remainder(60).toString().padLeft(2, '0')}';
 
     print('animation.value  ${animation.value} ');
     // print('inMinutes ${clockTimer.inMinutes.toString()}');
     // print('inSeconds ${clockTimer.inSeconds.toString()}');
     // print(
     //     'inSeconds.remainder ${clockTimer.inSeconds.remainder(60).toString()}');
-    return Text(
-      "$timerText",
-      style: TextStyle(
-        fontSize: 100,
-        color: Theme.of(context).primaryColor,
-      ),
+    return Column(
+      children: [
+        Text(
+          "$timerText",
+          style: TextStyle(
+            fontSize: 80,
+            color: ColorSet().pointColor,
+          ),
+        ),
+        Text(
+          '${clockTimer.inSeconds.remainder(60).toString().padLeft(2, '0')}',
+          style: TextStyle(
+            fontSize: 30,
+            color: ColorSet().pointColor,
+          ),
+        ),
+      ],
     );
   }
 }
