@@ -41,8 +41,8 @@ class Data {
     this.v,
   });
 
-  int latitude;
-  int longitude;
+  double latitude;
+  double longitude;
   String id;
   String name;
   int accTime;
