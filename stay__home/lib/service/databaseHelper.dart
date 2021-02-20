@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:stay__home/model/http/ModelGetUserInfo.dart';
 import 'package:stay__home/model/uesr.dart';
 
 // 선언된 데이터베이스 구조

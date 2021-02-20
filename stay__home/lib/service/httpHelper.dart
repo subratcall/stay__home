@@ -17,6 +17,8 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:stay__home/model/http/ModelDuplicateInspection.dart';
+import 'package:stay__home/model/http/ModelGetAccTimeRanker.dart';
+import 'package:stay__home/model/http/ModelGetTopTimeRanker.dart';
 import 'package:stay__home/model/http/ModelGetUserInfo.dart';
 import 'package:stay__home/model/uesr.dart';
 
@@ -143,5 +145,23 @@ class HttpService {
     print(jsonToData["NEW_JUSO"]);
 
     return jsonToData["NEW_JUSO"];
+  }
+
+  Future<GetAccTimeRanker> getAccTimeRanker() async {
+    var jsonToData;
+    url = "http://15.164.195.117:3000/api/utils/ranking/accTime";
+    response = await dio.get(url);
+
+    jsonToData = jsonDecode(response.data);
+    return GetAccTimeRanker.fromJson(jsonToData);
+  }
+
+  Future<GetTopTimeRanker> getTopTimeRanker() async {
+    var jsonToData;
+    url = "http://15.164.195.117:3000/api/utils/ranking/topTime";
+    response = await dio.get(url);
+
+    jsonToData = jsonDecode(response.data);
+    return GetTopTimeRanker.fromJson(jsonToData);
   }
 }
