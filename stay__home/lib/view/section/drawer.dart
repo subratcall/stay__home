@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:stay__home/controller/LocationController.dart';
+import 'package:stay__home/controller/UserController.dart';
 import 'package:stay__home/view/mainPage.dart';
 import 'package:stay__home/service/httpHelper.dart';
 import 'package:stay__home/view/rankingPage.dart';
 // import 'package:screenshot_share/screenshot_share.dart';
 import 'package:ndialog/ndialog.dart';
 import 'package:get/get.dart';
+import 'package:stay__home/service/databaseHelper.dart';
 
 class SectionDrawer extends StatefulWidget {
   @override
@@ -13,8 +15,19 @@ class SectionDrawer extends StatefulWidget {
 }
 
 class _SectionDrawerState extends State<SectionDrawer> {
-  String nickname = '닉네임설정';
+  String nickname;
+  int acctime;
+  int toptime;
   final controller = Get.put(LocationController());
+  final usercontroller = Get.put(UserController());
+
+  @override
+  void initState() {
+    nickname = usercontroller.getName();
+    acctime = usercontroller.getAccTime();
+    toptime = usercontroller.getTopTime();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +37,7 @@ class _SectionDrawerState extends State<SectionDrawer> {
         children: [
           DrawerHeader(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -33,18 +46,26 @@ class _SectionDrawerState extends State<SectionDrawer> {
                       nickname,
                       style: TextStyle(fontSize: 30),
                     ),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    InkWell(
-                      child: Icon(Icons.edit),
-                      onTap: () {
-                        controller.setHome();
-                        print("닉네임 변경");
-                      },
-                    ),
+                    // SizedBox(
+                    //   width: 20,
+                    // ),
+                    // InkWell(
+                    //   child: Icon(Icons.edit),
+                    //   onTap: () {
+                    //     controller.setHome();
+                    //     print("닉네임 변경");
+                    //   },
+                    // ),
                   ],
-                )
+                ),
+                SizedBox(height: 30),
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Text('나의 누적 기록: ' + acctime.toString(),
+                      style: TextStyle(fontSize: 15)),
+                ),
+                Text('나의 최고 기록: ' + toptime.toString(),
+                    style: TextStyle(fontSize: 15))
               ],
             ),
           ),
