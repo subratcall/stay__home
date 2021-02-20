@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:stay__home/controller/LocationController.dart';
+import 'package:stay__home/controller/UserController.dart';
 import 'package:stay__home/design/ColorSet.dart';
 import 'package:stay__home/model/uesr.dart';
 import 'package:stay__home/service/databaseHelper.dart';
@@ -13,93 +14,99 @@ import 'package:stay__home/service/httpHelper.dart';
 import 'package:stay__home/view/mainPage.dart';
 import 'package:stay__home/view/inputPage.dart';
 import 'package:stay__home/view/onboarding.dart';
+import 'package:stay__home/view/rankingPage.dart';
 import 'package:stay__home/view/startPage.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const fetchBackground = "fetchBackground";
 final locationController = Get.put(LocationController());
+final userController = Get.put(UserController());
 final dbController = DBController();
 
 //  Workmanager Task
 void callbackDispatcher() {
-  Workmanager.executeTask((task, inputData) async {
-    switch (task) {
-      case fetchBackground:
-        try {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          String startTimePrefs = prefs.getString('start_time');
-          DateTime getStartTimePrefsDateTime;
-          double sendSecond;
-          Position userLocation = await Geolocator.getCurrentPosition(
-              desiredAccuracy: LocationAccuracy.high);
-          await dbController.user().then((value) {
-            //  SQlite의 User Data의 집주소와 현재 위치를 비교
-            //  집이 아닌 경우
-            if (userLocation.latitude > value[0].latitude + 0.00100 ||
-                userLocation.latitude < value[0].latitude - 0.00100 ||
-                userLocation.longitude > value[0].longitude + 0.00100 ||
-                userLocation.longitude < value[0].longitude - 0.00100) {
-              //  시작 시간이 비어있지 않으면, 타이머가 작동하고 있다는 의미
-              if (startTimePrefs != "") {
-                //  getStartTimePrefsDataTime에 Prefs의 start_time값을 파싱해 DateTime 형식으로 바꿈
+  try {
+    Workmanager.executeTask((task, inputData) async {
+      switch (task) {
+        case fetchBackground:
+          try {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            String startTimePrefs = prefs.getString('start_time');
+            DateTime getStartTimePrefsDateTime;
+            double sendSecond;
+            Position userLocation = await Geolocator.getCurrentPosition(
+                desiredAccuracy: LocationAccuracy.high);
+            await dbController.user().then((value) {
+              //  SQlite의 User Data의 집주소와 현재 위치를 비교
+              //  집이 아닌 경우
+              if (userLocation.latitude > value[0].latitude + 0.00100 ||
+                  userLocation.latitude < value[0].latitude - 0.00100 ||
+                  userLocation.longitude > value[0].longitude + 0.00100 ||
+                  userLocation.longitude < value[0].longitude - 0.00100) {
+                //  시작 시간이 비어있지 않으면, 타이머가 작동하고 있다는 의미
+                if (startTimePrefs != "") {
+                  //  getStartTimePrefsDataTime에 Prefs의 start_time값을 파싱해 DateTime 형식으로 바꿈
 
-                getStartTimePrefsDateTime =
-                    new DateFormat("yyyy-MM-dd hh:mm:ss")
-                        .parse(prefs.getString("start_time"));
+                  getStartTimePrefsDateTime =
+                      new DateFormat("yyyy-MM-dd hh:mm:ss")
+                          .parse(prefs.getString("start_time"));
 
-                //  서버에 보낼 시간을 계산함.
-                sendSecond = DateTime.now()
-                    .difference(getStartTimePrefsDateTime)
-                    .inSeconds
-                    .toDouble();
+                  //  서버에 보낼 시간을 계산함.
+                  sendSecond = DateTime.now()
+                      .difference(getStartTimePrefsDateTime)
+                      .inSeconds
+                      .toDouble();
 
-                //  SQlite의 User Data를 기반으로 서버에 시간을 전송후 SQlite의 재저장
-                dbController.user().then((localUser) {
-                  HttpService()
-                      .updateTime(name: localUser[0].name, time: sendSecond);
-                  HttpService()
-                      .getUserInfo(name: localUser[0].name)
-                      .then((serverUser) {
-                    dbController
-                        .updateUser(User(
-                      id: 0,
-                      name: serverUser.data.name,
-                      accTime: serverUser.data.accTime,
-                      topTime: serverUser.data.topTime,
-                      latitude: serverUser.data.latitude,
-                      longitude: serverUser.data.longitude,
-                    ))
-                        .then((_) async {
-                      print("업뎃 완료");
-                      print(await dbController.user());
+                  //  SQlite의 User Data를 기반으로 서버에 시간을 전송후 SQlite의 재저장
+                  dbController.user().then((localUser) {
+                    HttpService()
+                        .updateTime(name: localUser[0].name, time: sendSecond);
+                    HttpService()
+                        .getUserInfo(name: localUser[0].name)
+                        .then((serverUser) {
+                      dbController
+                          .updateUser(User(
+                        id: 0,
+                        name: serverUser.data.name,
+                        accTime: serverUser.data.accTime,
+                        topTime: serverUser.data.topTime,
+                        latitude: serverUser.data.latitude,
+                        longitude: serverUser.data.longitude,
+                      ))
+                          .then((_) async {
+                        print("업뎃 완료");
+                        print(await dbController.user());
+                      });
                     });
                   });
-                });
+                  prefs.setString('start_time', "");
+                }
                 prefs.setString('start_time', "");
+                print("집이 아닙니다.");
+              } else {
+                //  집인 경우
+                if (startTimePrefs == "") {
+                  prefs.setString('start_time', DateTime.now().toString());
+                }
+                print("집입니다.");
               }
-              prefs.setString('start_time', "");
-              print("집이 아닙니다.");
-            } else {
-              //  집인 경우
-              if (startTimePrefs == "") {
-                prefs.setString('start_time', DateTime.now().toString());
-              }
-              print("집입니다.");
-            }
-          });
-        } catch (e) {
-          Get.snackbar("오류", "오류메세지 $e",
-              colorText: ColorSet().lightColor,
-              backgroundColor: ColorSet().pointColor);
-        }
-        break;
-      default:
-        locationController.determinePosition();
-        break;
-    }
-    return Future.value(true);
-  });
+            });
+          } catch (e) {
+            Get.snackbar("오류", "오류메세지 $e",
+                colorText: ColorSet().lightColor,
+                backgroundColor: ColorSet().pointColor);
+          }
+          break;
+        default:
+          locationController.determinePosition();
+          break;
+      }
+      return Future.value(true);
+    });
+  } catch (e) {
+    print("Error: " + e);
+  }
 }
 
 //   SharedPreferences를 통해 첫 실행인지 비교
@@ -122,6 +129,7 @@ void main() async {
    * .initialize : callbackDispatcher 입력
    * .registerPeriodicTack : Task에 등록
   */
+
   WidgetsFlutterBinding.ensureInitialized();
   Workmanager.initialize(
     callbackDispatcher,
@@ -183,12 +191,17 @@ class MyApp extends StatelessWidget {
                 transition: Transition.fadeIn,
               ),
               GetPage(
+                name: '/inputPage',
+                page: () => InputPage(),
+                transition: Transition.fadeIn,
+              ),
+              GetPage(
                   name: '/onboardingPage',
                   page: () => OnBoardingPage(),
                   transition: Transition.fadeIn),
               GetPage(
-                name: '/inputPage',
-                page: () => InputPage(),
+                name: '/rankingPage',
+                page: () => RankingPage(),
                 transition: Transition.fadeIn,
               ),
             ],
