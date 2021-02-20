@@ -58,7 +58,7 @@ class _SectionDrawerState extends State<SectionDrawer> {
                     // ),
                   ],
                 ),
-                SizedBox(height: 30),
+                SizedBox(height: 15),
                 Padding(
                   padding: const EdgeInsets.all(10),
                   child: Text('나의 누적 기록: ' + acctime.toString(),
