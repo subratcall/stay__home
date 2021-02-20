@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:stay__home/controller/LocationController.dart';
+import 'package:stay__home/controller/UserController.dart';
 import 'package:stay__home/service/databaseHelper.dart';
 import 'package:stay__home/view/mainPage.dart';
 import 'package:stay__home/service/httpHelper.dart';
-// import 'package:screenshot_share/screenshot_share.dart';
 import 'package:ndialog/ndialog.dart';
 import 'package:get/get.dart';
 
@@ -13,18 +13,26 @@ class SectionDrawer extends StatefulWidget {
 }
 
 class _SectionDrawerState extends State<SectionDrawer> {
-  String nickname;
-  final dbController = DBController();
+  String nickName;
+  String accTime = "로딩중";
+  String topTime = "로딩중";
+  final userController = Get.put(UserController());
 
   @override
   void initState() {
-    dbController.onInit();
     super.initState();
+    nickName = userController.getName();
+    Future.delayed(Duration.zero, () async {
+      loadUserInfoToServer();
+    });
   }
 
-  getUserName() {
-    dbController.user().then((value) {
-      return value[0].name;
+  void loadUserInfoToServer() {
+    HttpService().getUserInfo(name: nickName).then((value) {
+      setState(() {
+        accTime = value.data.accTime.toString();
+        topTime = value.data.topTime.toString();
+      });
     });
   }
 
@@ -41,25 +49,29 @@ class _SectionDrawerState extends State<SectionDrawer> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      getUserName(),
-                      style: TextStyle(fontSize: 30),
-                    ),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    InkWell(
-                      child: Icon(Icons.edit),
-                      onTap: () {},
+                    Container(
+                      child: Text(
+                        nickName + "님",
+                        style: TextStyle(fontSize: 25),
+                      ),
                     ),
                   ],
-                )
+                ),
+                SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Text('나의 누적 기록: ' + accTime.toString(),
+                      style: TextStyle(fontSize: 15)),
+                ),
+                Text('나의 최고 기록: ' + topTime.toString(),
+                    style: TextStyle(fontSize: 15))
               ],
             ),
           ),
           ListTile(
             title: Text('집 설정'),
             onTap: () {
+              //  현재 위치로 집을 설정되었습니다.-> 메세지
               //  유저 현재 위도 경도를 받아서
               //  서버 업데이트
               //  DB 업데이트
@@ -67,9 +79,9 @@ class _SectionDrawerState extends State<SectionDrawer> {
             },
           ),
           ListTile(
-            title: Text('공유하기'),
+            title: Text('랭킹페이지'),
             onTap: () {
-              print("공유하기");
+              Get.toNamed('/rankingPage');
             },
           ),
           ListTile(

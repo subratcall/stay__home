@@ -43,13 +43,13 @@ class _InputPageState extends State<InputPage> {
 
   @override
   void initState() {
-    super.initState();
     isNameOk = false;
     isLocationOk = false;
 
     translateAddress = "";
 
     locationController.determinePosition();
+    super.initState();
   }
 
   @override

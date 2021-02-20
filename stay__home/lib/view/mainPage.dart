@@ -6,8 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:stay__home/controller/LocationController.dart';
+import 'package:stay__home/controller/UserController.dart';
 import 'package:stay__home/design/ColorSet.dart';
 import 'package:stay__home/main.dart';
+import 'package:stay__home/service/databaseHelper.dart';
 import 'package:stay__home/view/section/board.dart';
 import 'package:stay__home/view/section/drawer.dart';
 import 'package:stay__home/view/section/timer.dart';
@@ -23,12 +25,25 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   final locationcontroller = Get.put(LocationController());
+  final dbController = Get.put(DBController());
+  final userController = Get.put(UserController());
 
+  //  앱 실행 시, userController에 db 내용을 저장
   @override
   void initState() {
-    super.initState();
+    dbController.onInit();
     locationcontroller.determinePosition();
     locationcontroller.getCurrentLocation();
+    Future.delayed(Duration.zero, () async {
+      dbController.user().then((localUserDataBase) {
+        userController.setName(localUserDataBase[0].name);
+        userController.setAcctime(localUserDataBase[0].accTime);
+        userController.setTopTime(localUserDataBase[0].topTime);
+        userController.setLatitude(localUserDataBase[0].latitude);
+        userController.setLongitude(localUserDataBase[0].longitude);
+      });
+    });
+    super.initState();
   }
 
   @override
