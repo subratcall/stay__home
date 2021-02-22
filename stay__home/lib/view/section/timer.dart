@@ -5,6 +5,7 @@ import 'dart:isolate';
 
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:ntp/ntp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stay__home/controller/LocationController.dart';
 import 'package:stay__home/controller/UserController.dart';
@@ -74,6 +75,7 @@ class _SectionTimerState extends State<SectionTimer> {
   }
 
   void _handleMessage(dynamic data) async {
+    DateTime dateTimeNTPNow = await NTP.now();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     startTimePrefs = prefs.getString('start_time');
     Position userLocation = await Geolocator.getCurrentPosition(
@@ -94,7 +96,7 @@ class _SectionTimerState extends State<SectionTimer> {
                 .parse(prefs.getString("start_time"));
 
             //  서버에 보낼 시간을 계산함.
-            sendSecond = DateTime.now()
+            sendSecond = dateTimeNTPNow
                 .difference(getStartTimePrefsDateTime)
                 .inSeconds
                 .toDouble();
@@ -129,7 +131,7 @@ class _SectionTimerState extends State<SectionTimer> {
         } else {
           //  집인 경우
           if (startTimePrefs == "" || startTimePrefs == null) {
-            prefs.setString('start_time', DateTime.now().toString());
+            prefs.setString('start_time', dateTimeNTPNow.toString());
           }
 
           // Display 용 계산
@@ -137,7 +139,7 @@ class _SectionTimerState extends State<SectionTimer> {
               .parse(prefs.getString("start_time"));
 
           //  서버에 보낼 시간을 계산함.
-          displaySecond = DateTime.now()
+          displaySecond = dateTimeNTPNow
               .difference(getStartTimePrefsDateTime)
               .inSeconds
               .toDouble();

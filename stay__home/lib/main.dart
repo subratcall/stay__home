@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:ntp/ntp.dart';
 import 'package:stay__home/controller/LocationController.dart';
 import 'package:stay__home/controller/UserController.dart';
 import 'package:stay__home/design/ColorSet.dart';
@@ -34,6 +35,7 @@ void callbackDispatcher() {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             String startTimePrefs = prefs.getString('start_time');
             DateTime getStartTimePrefsDateTime;
+            DateTime dateTimeNTPNow = await NTP.now();
             double sendSecond;
             Position userLocation = await Geolocator.getCurrentPosition(
                 desiredAccuracy: LocationAccuracy.high);
@@ -53,7 +55,7 @@ void callbackDispatcher() {
                           .parse(prefs.getString("start_time"));
 
                   //  서버에 보낼 시간을 계산함.
-                  sendSecond = DateTime.now()
+                  sendSecond = dateTimeNTPNow
                       .difference(getStartTimePrefsDateTime)
                       .inSeconds
                       .toDouble();
@@ -87,7 +89,7 @@ void callbackDispatcher() {
               } else {
                 //  집인 경우
                 if (startTimePrefs == "") {
-                  prefs.setString('start_time', DateTime.now().toString());
+                  prefs.setString('start_time', dateTimeNTPNow.toString());
                 }
                 print("집입니다.");
               }
