@@ -43,6 +43,8 @@ class _InputPageState extends State<InputPage> {
 
   @override
   void initState() {
+    tileText = "클릭으로 위치를 지정해 주세요.";
+
     isNameOk = false;
     isLocationOk = false;
 
@@ -163,8 +165,21 @@ class _InputPageState extends State<InputPage> {
             translateAddress = await HttpService().translateAddress(
                 latitude: locationController.homeLatitude,
                 longitude: locationController.homeLongitude);
-            setState(() {
-              isLocationOk = true;
+            await HttpService()
+                .translateAddress(
+                    latitude: locationController.homeLatitude,
+                    longitude: locationController.homeLongitude)
+                .then((value) {
+              setState(() {
+                isLocationOk = true;
+                if (translateAddress != null) {
+                  tileText = value;
+                } else if (locationController.homeLatitude != 0.0 ||
+                    locationController.homeLongitude != 0.0) {
+                  tileText =
+                      "${locationController.homeLatitude}, ${locationController.homeLongitude}";
+                }
+              });
             });
           },
           title: Text(
@@ -174,25 +189,32 @@ class _InputPageState extends State<InputPage> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          subtitle: GetBuilder<LocationController>(
-            builder: (_) {
-              if (_.longitudeData == 0.0 || _.latitudeData == 0.0) {
-                tileText = "클릭으로 위치를 지정해 주세요.";
-              } else {
-                tileText = translateAddress == "" || translateAddress == null
-                    ? "${_.longitudeData.toString()}, ${_.latitudeData.toString()}"
-                    : translateAddress;
-                //  translateAddress API 요청 오류나, 요청 초과가 이뤄진다면 생기는 에러에 대해 처리가 필요하다.
-              }
-              return Text(
-                tileText,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.normal,
-                ),
-              );
-            },
+          subtitle: Text(
+            tileText,
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.normal,
+            ),
           ),
+          // subtitle: GetBuilder<LocationController>(
+          //   builder: (_) {
+          //     if (_.longitudeData == 0.0 || _.latitudeData == 0.0) {
+          //       tileText = "클릭으로 위치를 지정해 주세요.";
+          //     } else {
+          //       tileText = translateAddress == "" || translateAddress == null
+          //           ? "${_.longitudeData.toString()}, ${_.latitudeData.toString()}"
+          //           : translateAddress;
+          //       //  translateAddress API 요청 오류나, 요청 초과가 이뤄진다면 생기는 에러에 대해 처리가 필요하다.
+          //     }
+          //     return Text(
+          //       tileText,
+          //       style: TextStyle(
+          //         color: Colors.white,
+          //         fontWeight: FontWeight.normal,
+          //       ),
+          //     );
+          //   },
+          // ),
         ),
       ),
     );

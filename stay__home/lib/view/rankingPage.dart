@@ -19,6 +19,7 @@ class _RankingPageState extends State<RankingPage> {
   List<Datun> rankingTopData;
   String buttonText;
   bool buttonState;
+  int itemLength;
 
   @override
   void initState() {
@@ -26,6 +27,7 @@ class _RankingPageState extends State<RankingPage> {
 
     buttonText = "누적시간별 랭킹";
     buttonState = true;
+    itemLength = 0;
 
     Future.delayed(Duration.zero, () async {
       loadAccRankingList();
@@ -37,6 +39,7 @@ class _RankingPageState extends State<RankingPage> {
     HttpService().getAccTimeRanker().then((value) {
       setState(() {
         rankingAccData = value.data;
+        itemLength = value.data.length;
       });
     });
   }
@@ -45,6 +48,7 @@ class _RankingPageState extends State<RankingPage> {
     HttpService().getTopTimeRanker().then((value) {
       setState(() {
         rankingTopData = value.data;
+        itemLength = value.data.length;
       });
     });
   }
@@ -110,7 +114,8 @@ class _RankingPageState extends State<RankingPage> {
             ),
           );
         },
-        itemCount: (rankingAccData == null && rankingTopData == null) ? 0 : 50,
+        itemCount:
+            (rankingAccData == null && rankingTopData == null) ? 0 : itemLength,
       ),
     );
   }

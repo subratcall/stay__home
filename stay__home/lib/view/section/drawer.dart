@@ -16,6 +16,7 @@ class _SectionDrawerState extends State<SectionDrawer> {
   String nickName;
   String accTime = "로딩중";
   String topTime = "로딩중";
+
   final userController = Get.put(UserController());
 
   @override
@@ -35,6 +36,8 @@ class _SectionDrawerState extends State<SectionDrawer> {
       });
     });
   }
+
+  void renderRecordBox() {}
 
   @override
   Widget build(BuildContext context) {
@@ -58,13 +61,40 @@ class _SectionDrawerState extends State<SectionDrawer> {
                   ],
                 ),
                 SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Text('나의 누적 기록: ' + accTime.toString(),
-                      style: TextStyle(fontSize: 15)),
+                Row(
+                  children: [
+                    Container(
+                      height: 50,
+                      color: Colors.amber,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text("누적 기록"),
+                      ),
+                    ),
+                    Container(
+                      height: 50,
+                      color: Colors.deepOrange,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          accTime.toString(),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                Text('나의 최고 기록: ' + topTime.toString(),
-                    style: TextStyle(fontSize: 15))
+                Row(
+                  children: [
+                    Container(
+                      child: Text("최고 기록"),
+                    ),
+                    Container(
+                      child: Text(
+                        topTime.toString(),
+                      ),
+                    ),
+                  ],
+                )
               ],
             ),
           ),
