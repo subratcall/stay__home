@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:stay__home/design/ColorSet.dart';
 import 'package:stay__home/model/http/ModelGetAccTimeRanker.dart';
@@ -53,12 +54,39 @@ class _RankingPageState extends State<RankingPage> {
     });
   }
 
+  String valueToTimeString({@required int value}) {
+    double second = value.toDouble();
+    double minute = second / 60;
+    double hour = minute / 60;
+    double day = hour / 24;
+
+    hour %= 24;
+    minute %= 60;
+    second %= 60;
+
+    return day.toInt() > 0
+        ? "${day.toInt()}일 ${hour.toInt()}시간 ${minute.toInt()}분 ${second.toInt()}초"
+        : hour.toInt() > 0
+            ? "${hour.toInt()}시간 ${minute.toInt()}분 ${second.toInt()}초"
+            : minute.toInt() > 0
+                ? "${minute.toInt()}분 ${second.toInt()}초"
+                : "${second.toInt()}초";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ColorSet().pointColor,
-        automaticallyImplyLeading: false,
+        leading: InkWell(
+          onTap: () {
+            Get.back();
+          },
+          child: Icon(
+            Icons.arrow_back_ios_rounded,
+            color: Colors.white,
+          ),
+        ),
         elevation: 0.0,
         centerTitle: true,
         title: Text(
@@ -100,17 +128,28 @@ class _RankingPageState extends State<RankingPage> {
                   ? rankingAccData[index].name
                   : rankingTopData[index].name,
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
+              maxLines: 1,
+            ),
+            subtitle: Text(
+              buttonState
+                  ? valueToTimeString(value: rankingAccData[index].accTime)
+                  : valueToTimeString(value: rankingTopData[index].topTime)
+                ..toString(),
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
             ),
             leading: Text(
               (index + 1).toString(),
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            trailing: Text(
-              buttonState
-                  ? rankingAccData[index].accTime.toString()
-                  : rankingTopData[index].topTime.toString()
-                ..toString(),
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
+            trailing: Icon(
+              Icons.shield,
+              color: index == 0
+                  ? Color(0xFFD4AF37)
+                  : index == 1
+                      ? Color(0xFFC0C0C0)
+                      : index == 2
+                          ? Color(0xFF9F7A34)
+                          : Colors.transparent,
             ),
           );
         },

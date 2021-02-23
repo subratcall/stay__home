@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -51,15 +52,17 @@ class SectionBoard extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
+            AutoSizeText(
               "$randomItem",
+              maxLines: 1,
               style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
                   color: Colors.white),
             ),
-            Text(
+            AutoSizeText(
               " 위해 집에 있어주세요",
+              maxLines: 1,
               style: TextStyle(fontSize: 25, color: Colors.white),
             ),
           ],
@@ -72,8 +75,9 @@ class SectionBoard extends StatelessWidget {
           width: Get.size.width * 0.5,
           child: FittedBox(
             fit: BoxFit.contain,
-            child: Text(
+            child: AutoSizeText(
               "🏡 Stay Home Challenge",
+              maxLines: 1,
               style: TextStyle(color: Colors.white),
             ),
           ),

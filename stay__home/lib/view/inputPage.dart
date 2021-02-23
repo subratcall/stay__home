@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -182,39 +183,21 @@ class _InputPageState extends State<InputPage> {
               });
             });
           },
-          title: Text(
+          title: AutoSizeText(
             "현재 위치를 집으로 설정합니다",
+            maxLines: 1,
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
             ),
           ),
-          subtitle: Text(
+          subtitle: AutoSizeText(
             tileText,
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.normal,
             ),
           ),
-          // subtitle: GetBuilder<LocationController>(
-          //   builder: (_) {
-          //     if (_.longitudeData == 0.0 || _.latitudeData == 0.0) {
-          //       tileText = "클릭으로 위치를 지정해 주세요.";
-          //     } else {
-          //       tileText = translateAddress == "" || translateAddress == null
-          //           ? "${_.longitudeData.toString()}, ${_.latitudeData.toString()}"
-          //           : translateAddress;
-          //       //  translateAddress API 요청 오류나, 요청 초과가 이뤄진다면 생기는 에러에 대해 처리가 필요하다.
-          //     }
-          //     return Text(
-          //       tileText,
-          //       style: TextStyle(
-          //         color: Colors.white,
-          //         fontWeight: FontWeight.normal,
-          //       ),
-          //     );
-          //   },
-          // ),
         ),
       ),
     );
@@ -248,6 +231,7 @@ class _InputPageState extends State<InputPage> {
             child: Container(
               width: Get.size.width * 0.5,
               child: TextFormField(
+                maxLength: 10,
                 controller: _textEditingController,
                 style: TextStyle(fontSize: 30),
                 // 텍스트폼필드에 validator 추가

@@ -32,6 +32,8 @@ void callbackDispatcher() {
       switch (task) {
         case fetchBackground:
           try {
+            dbController.onInit();
+
             SharedPreferences prefs = await SharedPreferences.getInstance();
             String startTimePrefs = prefs.getString('start_time');
             DateTime getStartTimePrefsDateTime;
@@ -177,6 +179,8 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: 'Flutter Demo',
             theme: ThemeData(
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
               primarySwatch: Colors.grey,
               visualDensity: VisualDensity.adaptivePlatformDensity,
             ),

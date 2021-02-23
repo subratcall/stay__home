@@ -81,13 +81,13 @@ class _SectionTimerState extends State<SectionTimer> {
     Position userLocation = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     try {
-      await dbController.user().then((value) {
+      await dbController.user().then((dbHome) {
         //  SQlite의 User Data의 집주소와 현재 위치를 비교
         //  집이 아닌 경우
-        if (userLocation.latitude > value[0].latitude + 0.00100 ||
-            userLocation.latitude < value[0].latitude - 0.00100 ||
-            userLocation.longitude > value[0].longitude + 0.00100 ||
-            userLocation.longitude < value[0].longitude - 0.00100) {
+        if (userLocation.latitude > dbHome[0].latitude + 0.00100 ||
+            userLocation.latitude < dbHome[0].latitude - 0.00100 ||
+            userLocation.longitude > dbHome[0].longitude + 0.00100 ||
+            userLocation.longitude < dbHome[0].longitude - 0.00100) {
           //  시작 시간이 비어있지 않으면, 타이머가 작동하고 있다는 의미
           if (startTimePrefs != "") {
             //  getStartTimePrefsDataTime에 Prefs의 start_time값을 파싱해 DateTime 형식으로 바꿈
