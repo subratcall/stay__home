@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +11,9 @@ import 'package:stay__home/service/databaseHelper.dart';
 import 'package:stay__home/view/section/board.dart';
 import 'package:stay__home/view/section/drawer.dart';
 import 'package:stay__home/view/section/timer.dart';
+
+import 'package:permission_handler/permission_handler.dart'
+    as permission_handler;
 
 class MainPage extends StatefulWidget {
   MainPage({Key key, this.title}) : super(key: key);
@@ -43,7 +44,17 @@ class _MainPageState extends State<MainPage> {
         userController.setLongitude(localUserDataBase[0].longitude);
       });
     });
+
     super.initState();
+  }
+
+  void checkPermission() async {
+    if (await permission_handler.Permission.location.isDenied) {
+      await permission_handler.Permission.location.request();
+    }
+    if (await permission_handler.Permission.location.isPermanentlyDenied) {
+      permission_handler.openAppSettings();
+    }
   }
 
   @override
