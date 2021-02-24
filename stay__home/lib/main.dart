@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:intl/intl.dart';
 
 import 'package:flutter/material.dart';
@@ -137,7 +138,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Workmanager.initialize(
     callbackDispatcher,
-    isInDebugMode: true,
+    isInDebugMode: false,
   );
   Workmanager.registerPeriodicTask("1", fetchBackground,
       frequency: Duration(minutes: 15), initialDelay: Duration(minutes: 1));
@@ -232,7 +233,7 @@ class Splash extends StatelessWidget {
               SizedBox(
                 height: Get.size.height * 0.15,
               ),
-              Text(
+              AutoSizeText(
                 "#StayHome",
                 style: TextStyle(
                     color: Colors.white,
