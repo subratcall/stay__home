@@ -171,9 +171,10 @@ class _SectionTimerState extends State<SectionTimer> {
         });
       }
     } catch (e) {
-      Get.snackbar("오류", "오류메세지 $e",
-          colorText: ColorSet().lightColor,
-          backgroundColor: ColorSet().pointColor);
+      // Get.snackbar("오류", "오류메세지 $e",
+      //     colorText: ColorSet().lightColor,
+      //     backgroundColor: ColorSet().pointColor);
+      print(e);
     }
   }
 
