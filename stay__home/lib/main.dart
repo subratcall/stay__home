@@ -28,10 +28,11 @@ final dbController = DBController();
 
 //  Workmanager Task
 void callbackDispatcher() {
+  print("Workmanager Task");
   try {
     Workmanager.executeTask((task, inputData) async {
       switch (task) {
-        case fetchBackground:
+        case Workmanager.iOSBackgroundTask:
           try {
             dbController.onInit();
 
@@ -140,8 +141,9 @@ void main() async {
     callbackDispatcher,
     isInDebugMode: false,
   );
-  Workmanager.registerPeriodicTask("1", fetchBackground,
-      frequency: Duration(minutes: 15), initialDelay: Duration(minutes: 1));
+  //  IOS 에선 아래를 사용하면 안됨.
+  // Workmanager.registerPeriodicTask("1", fetchBackground,
+  //     frequency: Duration(minutes: 15), initialDelay: Duration(minutes: 1));
   dbController.onInit();
   checkFirstTime().then((value) {
     if (value) {
